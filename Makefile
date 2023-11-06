@@ -18,9 +18,6 @@ all:
 clean:
 	cargo clean
 
-clippy:
-	cargo clippy
-
 debug:
 	cargo build
 

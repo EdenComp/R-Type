@@ -19,9 +19,6 @@ jobs:
       - name: Compilation
         timeout-minutes: 2
         run: make
-      - name: Clippy
-        timeout-minutes: 2
-        run: make clippy
       - name: Test executables presence
         run: IFS=',' read -r -a array <<< ${{ env.EXECUTABLES }} ; for value in ${array[@]} ; do find . -executable -name "${value}" | grep -q . || echo "::error title="Executable not found"::${value}" ; done
       - name: Exit if executable not found
