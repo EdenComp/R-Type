@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "R-Type"
+name = "r-type"
 version = "0.1.0"
