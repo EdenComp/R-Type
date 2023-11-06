@@ -1,0 +1,28 @@
+name: R-Type
+
+on:
+  pull_request:
+
+env:
+  EXECUTABLES: "pbrain-gomoku-ai"
+
+jobs:
+  repository_compilation:
+    name: "Compilation & Clippy"
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compilation
+        timeout-minutes: 2
+        run: make
+      - name: Clippy
+        timeout-minutes: 2
+        run: make clippy
+      - name: Test executables presence
+        run: IFS=',' read -r -a array <<< ${{ env.EXECUTABLES }} ; for value in ${array[@]} ; do find . -executable -name "${value}" | grep -q . || echo "::error title="Executable not found"::${value}" ; done
+      - name: Exit if executable not found
+        run: IFS=',' read -r -a array <<< ${{ env.EXECUTABLES }} ; for value in ${array[@]} ; do find . -executable -name "${value}" | grep -q . || exit 1 ; done
