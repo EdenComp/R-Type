@@ -24,12 +24,25 @@ jobs:
       - name: Exit if executable not found
         run: IFS=',' read -r -a array <<< ${{ env.EXECUTABLES }} ; for value in ${array[@]} ; do find . -executable -name "${value}" | grep -q . || exit 1 ; done
 
+  format:
+    name: "Format"
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Format
+        run: cargo fmt --check
+
   tests:
     name: "Tests"
     runs-on: ubuntu-latest
     container: epitechcontent/epitest-docker:latest
     needs:
       - compilation
+      - format
     steps:
       - name: Repository checkout
         uses: actions/checkout@v4
