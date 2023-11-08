@@ -8,9 +8,14 @@ pub const DEFAULT_TIMEOUT_TURN: i32 = 5000;
 pub const DEFAULT_SIZE: i8 = 20;
 
 pub static ABOUT_COMMAND: &str = "ABOUT";
+pub static BEGIN_COMMAND: &str = "BEGIN";
+pub static BOARD_COMMAND: &str = "BOARD";
 pub static END_COMMAND: &str = "END";
 pub static INFO_COMMAND: &str = "INFO";
 pub static START_COMMAND: &str = "START";
+pub static TURN_COMMAND: &str = "TURN";
+
+pub static BOARD_END: &str = "DONE";
 
 pub static DEBUG_RESPONSE: &str = "DEBUG";
 pub static ERROR_RESPONSE: &str = "ERROR";
