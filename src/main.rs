@@ -1,11 +1,12 @@
 use std::io::{stdin, BufRead};
 use std::process::ExitCode;
 
+mod brain;
 mod constants;
 mod handler;
 
 fn main() -> ExitCode {
-    let handler = handler::GameHandler::new();
+    let mut handler = handler::GameHandler::new();
     let mut done = false;
 
     while !done {
