@@ -3,6 +3,7 @@ use std::process::ExitCode;
 
 mod brain;
 mod constants;
+mod game;
 mod handler;
 
 fn main() -> ExitCode {

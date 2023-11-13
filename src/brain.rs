@@ -1,15 +1,15 @@
-use std::cmp::{max, min};
 use crate::handler::GameHandler;
 use rand::{thread_rng, Rng};
+use std::cmp::{max, min};
 use std::thread;
 use std::time::Duration;
 
 impl GameHandler {
-    pub fn get_first_move(&self) -> (u8, u8) {
+    pub fn get_first_move(&self) -> (i8, i8) {
         (self.size_x / 2, self.size_y / 2)
     }
 
-    pub fn get_next_move(&mut self) -> (u8, u8) {
+    pub fn get_next_move(&mut self) -> (i8, i8) {
         let mut rng = thread_rng();
         let positions = self.get_positions_to_test();
         let index = rng.gen_range(0..positions.len());
@@ -18,8 +18,8 @@ impl GameHandler {
         positions[index]
     }
 
-    fn get_positions_to_test(&mut self) -> Vec<(u8, u8)> {
-        let mut vec: Vec<(u8, u8)> = Vec::new();
+    fn get_positions_to_test(&mut self) -> Vec<(i8, i8)> {
+        let mut vec: Vec<(i8, i8)> = Vec::new();
         let mut data;
 
         for x in 0..self.size_x {
@@ -37,7 +37,7 @@ impl GameHandler {
         vec
     }
 
-    fn append_positions_to_vec(&mut self, vec: &mut Vec<(u8, u8)>, pos: (u8, u8)) {
+    fn append_positions_to_vec(&mut self, vec: &mut Vec<(i8, i8)>, pos: (i8, i8)) {
         let min_x = max(pos.0 - 1, 0);
         let max_x = min(pos.0 + 1, self.size_x - 1);
         let min_y = max(pos.1 - 1, 0);

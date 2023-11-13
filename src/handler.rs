@@ -4,9 +4,9 @@ use std::collections::HashMap;
 // TODO Fixed size
 // https://github.com/EdenComp/R-Type/issues/5
 pub struct GameHandler {
-    pub table: [[u8; 20]; 20],
-    pub size_x: u8,
-    pub size_y: u8,
+    pub table: [[i8; 20]; 20],
+    pub size_x: i8,
+    pub size_y: i8,
     functions: HashMap<String, fn(&mut GameHandler, &str)>,
     board: bool,
     max_memory: i32,
@@ -32,7 +32,7 @@ impl GameHandler {
             // https://github.com/EdenComp/R-Type/issues/5
             size_x: 20,
             size_y: 20,
-            table: [[0u8; 20]; 20],
+            table: [[0i8; 20]; 20],
             board: false,
         }
     }
@@ -97,11 +97,11 @@ impl GameHandler {
         self.board = true;
     }
 
-    fn broadcast_turn(&self, pos: (u8, u8)) {
+    fn broadcast_turn(&self, pos: (i8, i8)) {
         println!("{},{}", pos.0, pos.1);
     }
 
-    fn register_turn(&mut self, pos: (u8, u8), me: bool) {
+    fn register_turn(&mut self, pos: (i8, i8), me: bool) {
         self.table[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
     }
 
@@ -158,11 +158,11 @@ impl GameHandler {
     }
 }
 
-fn parse_position(pos: &str) -> Option<(u8, u8)> {
+fn parse_position(pos: &str) -> Option<(i8, i8)> {
     match pos.split_once(',') {
         Some(str) => {
             let (x, y) = str;
-            match (x.parse::<u8>(), y.parse::<u8>()) {
+            match (x.parse::<i8>(), y.parse::<i8>()) {
                 (Ok(x), Ok(y)) => Some((x, y)),
                 _ => None,
             }
