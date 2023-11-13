@@ -5,6 +5,8 @@ use std::collections::HashMap;
 // https://github.com/EdenComp/R-Type/issues/5
 pub struct GameHandler {
     pub table: [[u8; 20]; 20],
+    pub size_x: u8,
+    pub size_y: u8,
     functions: HashMap<String, fn(&mut GameHandler, &str)>,
     board: bool,
     max_memory: i32,
@@ -28,6 +30,8 @@ impl GameHandler {
             timeout_turn: constants::DEFAULT_TIMEOUT_TURN,
             // TODO Fixed size
             // https://github.com/EdenComp/R-Type/issues/5
+            size_x: 20,
+            size_y: 20,
             table: [[0u8; 20]; 20],
             board: false,
         }
@@ -112,7 +116,7 @@ impl GameHandler {
     }
 
     fn begin(&mut self, _args: &str) {
-        let new_move = self.get_next_move();
+        let new_move = self.get_first_move();
 
         self.register_turn(new_move, true);
         self.broadcast_turn(new_move);
