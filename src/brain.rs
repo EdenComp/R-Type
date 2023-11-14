@@ -1,6 +1,7 @@
 use crate::handler::GameHandler;
 use rand::{thread_rng, Rng};
 use std::cmp::{max, min};
+use std::process::exit;
 use std::thread;
 use std::time::Duration;
 
@@ -11,11 +12,55 @@ impl GameHandler {
         }
 
         let mut rng = thread_rng();
-        let positions = self.get_positions_to_test();
-        let index = rng.gen_range(0..positions.len());
+        let mut positions = self.get_positions_to_test();
+        let index = self.simule_next_move(&mut positions);
+        //let index = rng.gen_range(0..positions.len());
 
         thread::sleep(Duration::from_millis(1000));
         positions[index]
+    }
+
+    fn display_map(&self, table: &[[i8; 20]; 20]) {
+        for x in 0..self.size.0 {
+            for y in 0..self.size.1 {
+                print!("{}", table[x as usize][y as usize])
+            }
+            println!(" ")
+        }
+        println!(" ")
+    }
+
+    fn simule_one_game(&self, pos: (i8, i8), mut copy_table: [[i8; 20]; 20]) -> bool {
+        static mut me: bool = true;
+        copy_table[pos.0 as usize][pos.1 as usize] = if unsafe { me } { 1 } else { 2 };
+        unsafe { me = !me };
+
+        self.display_map(&copy_table);
+
+        while !self.is_move_winning(pos, &copy_table) {
+            let mut rng = thread_rng();
+            // let mut positions = self.get_positions_to_test();
+            let index = rng.gen_range(0..20);
+
+            if copy_table[index][index] != 0 {
+                continue;
+            }
+            copy_table[index][index] = if unsafe { me } { 1 } else { 2 };
+            unsafe { me = !me };
+            self.display_map(&copy_table);
+            thread::sleep(Duration::from_millis(1000));
+        }
+        print!("winning move: ");
+        true
+    }
+
+    fn simule_next_move(&self, positions: &mut Vec <(i8, i8)>) -> usize {
+
+        self.display_map(&self.table);
+        for i in 0..positions.len() {
+            let win = self.simule_one_game((positions[i].0, positions[i].1), self.table.clone());
+        }
+        0
     }
 
     fn get_first_move(&self) -> (i8, i8) {
