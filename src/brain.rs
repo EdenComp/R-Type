@@ -5,17 +5,21 @@ use std::thread;
 use std::time::Duration;
 
 impl GameHandler {
-    pub fn get_first_move(&self) -> (i8, i8) {
-        (self.size.0 / 2, self.size.1 / 2)
-    }
-
     pub fn get_next_move(&mut self) -> (i8, i8) {
+        if self.turns == 0 {
+            return self.get_first_move();
+        }
+
         let mut rng = thread_rng();
         let positions = self.get_positions_to_test();
         let index = rng.gen_range(0..positions.len());
 
         thread::sleep(Duration::from_millis(1000));
         positions[index]
+    }
+
+    fn get_first_move(&self) -> (i8, i8) {
+        (self.size.0 / 2, self.size.1 / 2)
     }
 
     fn get_positions_to_test(&mut self) -> Vec<(i8, i8)> {

@@ -113,7 +113,7 @@ impl GameHandler {
     }
 
     fn begin(&mut self, _args: &str) {
-        let new_move = self.get_first_move();
+        let new_move = self.get_next_move();
 
         self.register_turn(new_move, true);
         self.broadcast_turn(new_move);
@@ -125,6 +125,7 @@ impl GameHandler {
                 *cell = 0;
             })
         });
+        self.turns = 0;
         self.board = true;
     }
 
@@ -180,7 +181,7 @@ fn parse_position(pos: &str) -> Option<(i8, i8)> {
 fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
     let arr: Vec<&str> = pos.split(',').collect();
 
-    if arr.len() == 3 {
+    if arr.len() != 3 {
         return None;
     }
     match (
