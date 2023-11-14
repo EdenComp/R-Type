@@ -6,7 +6,7 @@ use std::time::Duration;
 
 impl GameHandler {
     pub fn get_first_move(&self) -> (i8, i8) {
-        (self.size_x / 2, self.size_y / 2)
+        (self.size.0 / 2, self.size.1 / 2)
     }
 
     pub fn get_next_move(&mut self) -> (i8, i8) {
@@ -22,8 +22,8 @@ impl GameHandler {
         let mut vec: Vec<(i8, i8)> = Vec::new();
         let mut data;
 
-        for x in 0..self.size_x {
-            for y in 0..self.size_y {
+        for x in 0..self.size.0 {
+            for y in 0..self.size.1 {
                 data = self.table[x as usize][y as usize];
                 if data == 1 || data == 2 {
                     self.append_positions_to_vec(&mut vec, (x, y));
@@ -39,9 +39,9 @@ impl GameHandler {
 
     fn append_positions_to_vec(&mut self, vec: &mut Vec<(i8, i8)>, pos: (i8, i8)) {
         let min_x = max(pos.0 - 1, 0);
-        let max_x = min(pos.0 + 1, self.size_x - 1);
+        let max_x = min(pos.0 + 1, self.size.0 - 1);
         let min_y = max(pos.1 - 1, 0);
-        let max_y = min(pos.1 + 1, self.size_y - 1);
+        let max_y = min(pos.1 + 1, self.size.1 - 1);
 
         for x in min_x..=max_x {
             for y in min_y..=max_y {

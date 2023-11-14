@@ -5,8 +5,10 @@ use std::collections::HashMap;
 // https://github.com/EdenComp/R-Type/issues/5
 pub struct GameHandler {
     pub table: [[i8; 20]; 20],
-    pub size_x: i8,
-    pub size_y: i8,
+    pub state: [[i8; 20]; 20],
+    pub size: (i8, i8),
+    pub turns: i32,
+    pub max_turns: i32,
     functions: HashMap<String, fn(&mut GameHandler, &str)>,
     board: bool,
     max_memory: i32,
@@ -30,9 +32,11 @@ impl GameHandler {
             timeout_turn: constants::DEFAULT_TIMEOUT_TURN,
             // TODO Fixed size
             // https://github.com/EdenComp/R-Type/issues/5
-            size_x: 20,
-            size_y: 20,
+            size: (20, 20),
             table: [[0i8; 20]; 20],
+            state: [[0i8; 20]; 20],
+            turns: 0,
+            max_turns: 400,
             board: false,
         }
     }
@@ -58,9 +62,9 @@ impl GameHandler {
             self.begin(line);
             return false;
         }
-        match parse_position(line) {
+        match parse_board_position(line) {
             Some(pos) => {
-                self.register_turn(pos, false);
+                self.register_turn(pos.0, pos.1);
             }
             None => {
                 self.error("Invalid position");
@@ -88,21 +92,14 @@ impl GameHandler {
         }
     }
 
-    pub fn board(&mut self, _args: &str) {
-        self.table.iter_mut().for_each(|row| {
-            row.iter_mut().for_each(|cell| {
-                *cell = 0;
-            })
-        });
-        self.board = true;
-    }
-
     fn broadcast_turn(&self, pos: (i8, i8)) {
         println!("{},{}", pos.0, pos.1);
     }
 
     fn register_turn(&mut self, pos: (i8, i8), me: bool) {
         self.table[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
+        self.state[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
+        self.turns += 1;
     }
 
     fn about(&mut self, _args: &str) {
@@ -120,6 +117,15 @@ impl GameHandler {
 
         self.register_turn(new_move, true);
         self.broadcast_turn(new_move);
+    }
+
+    fn board(&mut self, _args: &str) {
+        self.table.iter_mut().for_each(|row| {
+            row.iter_mut().for_each(|cell| {
+                *cell = 0;
+            })
+        });
+        self.board = true;
     }
 
     fn end(&mut self, _args: &str) {}
@@ -168,5 +174,26 @@ fn parse_position(pos: &str) -> Option<(i8, i8)> {
             }
         }
         None => None,
+    }
+}
+
+fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
+    let arr: Vec<&str> = pos.split(',').collect();
+
+    if arr.len() == 3 {
+        return None;
+    }
+    match (
+        arr[0].parse::<i8>(),
+        arr[1].parse::<i8>(),
+        arr[2].parse::<i8>(),
+    ) {
+        (Ok(x), Ok(y), Ok(p)) => {
+            if p != 1 && p != 2 {
+                return None;
+            }
+            Some(((x, y), p == 1))
+        }
+        _ => None,
     }
 }
