@@ -14,7 +14,7 @@ impl GameHandler {
         let mut rng = thread_rng();
         let mut positions = self.get_positions_to_test();
         let index = self.simule_next_move(&mut positions);
-        //let index = rng.gen_range(0..positions.len());
+        // let index = rng.gen_range(0..positions.len());
 
         thread::sleep(Duration::from_millis(1000));
         positions[index]
@@ -30,27 +30,29 @@ impl GameHandler {
         println!(" ")
     }
 
-    fn simule_one_game(&self, pos: (i8, i8), mut copy_table: [[i8; 20]; 20]) -> bool {
+    fn simule_one_game(&self, pos: (i8, i8), mut table: [[i8; 20]; 20]) -> bool {
         static mut me: bool = true;
-        copy_table[pos.0 as usize][pos.1 as usize] = if unsafe { me } { 1 } else { 2 };
+        table[pos.0 as usize][pos.1 as usize] = if unsafe { me } { 1 } else { 2 };
         unsafe { me = !me };
 
-        self.display_map(&copy_table);
+        self.display_map(&table);
 
-        while !self.is_move_winning(pos, &copy_table) {
+        while !self.is_move_winning(pos) {
             let mut rng = thread_rng();
             // let mut positions = self.get_positions_to_test();
-            let index = rng.gen_range(0..20);
+            let x = rng.gen_range(0..20);
+            let y = rng.gen_range(0..20);
 
-            if copy_table[index][index] != 0 {
+            if table[x][y] != 0 {
                 continue;
             }
-            copy_table[index][index] = if unsafe { me } { 1 } else { 2 };
+            table[x][y] = if unsafe { me } { 1 } else { 2 };
             unsafe { me = !me };
-            self.display_map(&copy_table);
-            thread::sleep(Duration::from_millis(1000));
+            self.display_map(&table);
+            // thread::sleep(Duration::from_millis(1000));
         }
         print!("winning move: ");
+        thread::sleep(Duration::from_millis(1000));
         true
     }
 
@@ -58,7 +60,7 @@ impl GameHandler {
 
         self.display_map(&self.table);
         for i in 0..positions.len() {
-            let win = self.simule_one_game((positions[i].0, positions[i].1), self.table.clone());
+            let win = self.simule_one_game((positions[i].0, positions[i].1), self.table);
         }
         0
     }

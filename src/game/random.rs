@@ -16,7 +16,7 @@ impl GameHandler {
             self.table[pos.0 as usize][pos.1 as usize] = if turn { 1 } else { 2 };
             turns += 1;
             turn = !turn;
-            winning = self.is_move_winning(pos, &self.table);
+            winning = self.is_move_winning(pos);
         }
         self.restore_table();
         if turn {
