@@ -1,5 +1,4 @@
 use crate::handler::GameHandler;
-use rand::{thread_rng, Rng};
 use std::cmp::{max, min};
 use std::thread;
 use std::time::Duration;
@@ -10,9 +9,8 @@ impl GameHandler {
             return self.get_first_move();
         }
 
-        let mut rng = thread_rng();
         let positions = self.get_positions_to_test();
-        let index = rng.gen_range(0..positions.len());
+        let index = self.random.range(0, positions.len());
 
         thread::sleep(Duration::from_millis(1000));
         positions[index]

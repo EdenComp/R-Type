@@ -1,4 +1,5 @@
 use crate::constants;
+use crate::random::Random;
 use std::collections::HashMap;
 
 // TODO Fixed size
@@ -9,6 +10,7 @@ pub struct GameHandler {
     pub size: (i8, i8),
     pub turns: i32,
     pub max_turns: i32,
+    pub random: Random,
     functions: HashMap<String, fn(&mut GameHandler, &str)>,
     board: bool,
     max_memory: i32,
@@ -16,7 +18,7 @@ pub struct GameHandler {
 }
 
 impl GameHandler {
-    pub fn new() -> GameHandler {
+    pub fn new(random: Random) -> GameHandler {
         let mut functions: HashMap<String, fn(&mut GameHandler, &str)> = HashMap::new();
         functions.insert(constants::ABOUT_COMMAND.to_string(), GameHandler::about);
         functions.insert(constants::BEGIN_COMMAND.to_string(), GameHandler::begin);
@@ -38,6 +40,7 @@ impl GameHandler {
             turns: 0,
             max_turns: 400,
             board: false,
+            random,
         }
     }
 
