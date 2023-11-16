@@ -3,7 +3,16 @@ use crate::handler::GameHandler;
 use rand::{thread_rng, Rng};
 
 impl GameHandler {
-    pub fn simulate_random_game(&mut self, mut turn: bool) -> GameEnd {
+    pub fn simulate_random_game(&mut self, ai_pos: (i8, i8), enemy_pos: (i8, i8), mut turn: bool) -> GameEnd {
+        let ai_won = self.is_move_winning(ai_pos);
+        if ai_won {
+            return GameEnd::Victory;
+        }
+        let enemy_won = self.is_move_winning(enemy_pos);
+        if enemy_won {
+            return GameEnd::Defeat;
+        }
+
         let mut winning = false;
         let mut pos: (i8, i8);
         let mut turns: i32 = self.turns;

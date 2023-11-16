@@ -17,10 +17,8 @@ impl GameHandler {
 
         let mut rng = thread_rng();
         let mut positions = self.get_positions_to_test();
+        println!("positions: {:?}", positions);
         let index = self.simule_next_move(&mut positions);
-        // let index = rng.gen_range(0..positions.len());
-
-        thread::sleep(Duration::from_millis(1000));
         positions[index]
     }
 
@@ -34,15 +32,31 @@ impl GameHandler {
         println!(" ")
     }
 
-    fn simule_win(&mut self, simulation_t1: &mut Simulation) {
+    fn simule_win(&mut self, simulation_t1: &mut Simulation, ai_pos: &(i8, i8)) {
         for _ in 0..constants::SIMULATIONS_AMOUNT {
-            let index = self.simulate_random_game(true);
+            let index = self.simulate_random_game(*ai_pos, simulation_t1.next_move, true);
             match index {
                 Victory => simulation_t1.games.0 += 1,
                 Defeat => simulation_t1.games.1 += 1,
                 Draw => simulation_t1.games.2 += 1,
             }
         }
+    }
+
+    fn analyze_best_move(&mut self, vec_simulation: &Vec<Simulation>) -> usize {
+        let mut index = 0;
+        let mut max = 0.0;
+
+        self.display_vec_simulation(vec_simulation);
+
+        for i in 0..vec_simulation.len() {
+            if vec_simulation[i].percentages.0 > max {
+                max = vec_simulation[i].percentages.0;
+                index = i;
+            }
+        }
+        println!("index: {}", index);
+        index
     }
 
     fn average_game(&mut self, simulation_t0: &mut Simulation) { 
@@ -73,7 +87,6 @@ impl GameHandler {
 
     fn simule_next_move(&mut self, positions: &Vec <(i8, i8)>) -> usize {
 
-        self.display_map(&self.table);
         let mut vec_simulation: Vec<Simulation> = Vec::new();
 
         for i in 0..positions.len() {
@@ -82,22 +95,22 @@ impl GameHandler {
             let pos_first_complexity = self.get_positions_to_test();
 
             for k in 0..pos_first_complexity.len() {
-                self.table[pos_first_complexity[k].0 as usize][pos_first_complexity[k].1 as usize] = 1;
-                let mut simulation_t1 = Simulation::new(pos_first_complexity[k]);    
-                self.simule_win(&mut simulation_t1);
+                self.table[pos_first_complexity[k].0 as usize][pos_first_complexity[k].1 as usize] = 2;
+                let mut simulation_t1 = Simulation::new(pos_first_complexity[k]);
+                self.simule_win(&mut simulation_t1, &positions[i]);
 
                 simulation_t1.percentages.0 = (simulation_t1.games.0 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
                 simulation_t1.percentages.1 = (simulation_t1.games.1 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
                 simulation_t1.percentages.2 = (simulation_t1.games.2 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
-
+                println!("simulation_t1: {:?}", simulation_t1.games);
                 simulation_t0.nested.push(simulation_t1);
             }
             self.average_game(&mut simulation_t0);
             self.average_percentage(&mut simulation_t0, pos_first_complexity.len());
             vec_simulation.push(simulation_t0);
         }
-        self.display_vec_simulation(&vec_simulation);
-        0
+        let index = self.analyze_best_move(&vec_simulation);
+        index
     }
 
     fn get_first_move(&self) -> (i8, i8) {
