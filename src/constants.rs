@@ -21,3 +21,5 @@ pub static DEBUG_RESPONSE: &str = "DEBUG";
 pub static ERROR_RESPONSE: &str = "ERROR";
 pub static OK_RESPONSE: &str = "OK";
 pub static UNKNOWN_RESPONSE: &str = "UNKNOWN";
+
+pub static NBR_SIMULATION: i32 = 1000;

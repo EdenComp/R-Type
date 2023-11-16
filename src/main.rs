@@ -5,6 +5,7 @@ mod brain;
 mod constants;
 mod game;
 mod handler;
+mod simulation;
 
 fn main() -> ExitCode {
     let mut handler = handler::GameHandler::new();
