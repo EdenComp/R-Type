@@ -17,7 +17,7 @@ impl GameHandler {
 
         let mut rng = thread_rng();
         let mut positions = self.get_positions_to_test();
-        println!("positions: {:?}", positions);
+        // println!("positions: {:?}", positions);
         let index = self.simule_next_move(&mut positions);
         positions[index]
     }
@@ -47,7 +47,7 @@ impl GameHandler {
         let mut index = 0;
         let mut max = 0.0;
 
-        self.display_vec_simulation(vec_simulation);
+        // self.display_vec_simulation(vec_simulation);
 
         for i in 0..vec_simulation.len() {
             if vec_simulation[i].percentages.0 > max {
@@ -55,7 +55,7 @@ impl GameHandler {
                 index = i;
             }
         }
-        println!("index: {}", index);
+        // println!("index: {}", index);
         index
     }
 
@@ -102,12 +102,14 @@ impl GameHandler {
                 simulation_t1.percentages.0 = (simulation_t1.games.0 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
                 simulation_t1.percentages.1 = (simulation_t1.games.1 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
                 simulation_t1.percentages.2 = (simulation_t1.games.2 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
-                println!("simulation_t1: {:?}", simulation_t1.games);
+                // println!("simulation_t1: {:?}", simulation_t1.games);
                 simulation_t0.nested.push(simulation_t1);
+                self.table[pos_first_complexity[k].0 as usize][pos_first_complexity[k].1 as usize] = 0;
             }
             self.average_game(&mut simulation_t0);
             self.average_percentage(&mut simulation_t0, pos_first_complexity.len());
             vec_simulation.push(simulation_t0);
+            self.table[positions[i].0 as usize][positions[i].1 as usize] = 0;
         }
         let index = self.analyze_best_move(&vec_simulation);
         index
