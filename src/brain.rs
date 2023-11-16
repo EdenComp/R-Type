@@ -35,7 +35,7 @@ impl GameHandler {
     }
 
     fn simule_win(&mut self, simulation_t1: &mut Simulation) {
-        for _ in 0..constants::NBR_SIMULATION {
+        for _ in 0..constants::SIMULATIONS_AMOUNT {
             let index = self.simulate_random_game(true);
             match index {
                 Victory => simulation_t1.games.0 += 1,
@@ -56,17 +56,10 @@ impl GameHandler {
         simulation_t0.games = game;
     }
 
-    fn average_percentage(&mut self, simulation_t0: &mut Simulation) {
-        let mut percentage = (0.0, 0.0, 0.0);
-
-        for i in 0 .. simulation_t0.nested.len() {
-            percentage.0 += simulation_t0.nested[i].percentages.0;
-            percentage.1 += simulation_t0.nested[i].percentages.1;
-            percentage.2 += simulation_t0.nested[i].percentages.2;
-        }
-        simulation_t0.percentages.0 = percentage.0 / simulation_t0.nested.len() as f32;
-        simulation_t0.percentages.1 = percentage.1 / simulation_t0.nested.len() as f32;
-        simulation_t0.percentages.2 = percentage.2 / simulation_t0.nested.len() as f32;
+    fn average_percentage(&mut self, simulation_t0: &mut Simulation, len: usize) {
+        simulation_t0.percentages.0 = simulation_t0.games.0 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
+        simulation_t0.percentages.1 = simulation_t0.games.1 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
+        simulation_t0.percentages.2 = simulation_t0.games.2 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
     }
 
     fn display_vec_simulation(&self, vec_simulation: &Vec<Simulation>) {
@@ -93,14 +86,14 @@ impl GameHandler {
                 let mut simulation_t1 = Simulation::new(pos_first_complexity[k]);    
                 self.simule_win(&mut simulation_t1);
 
-                simulation_t1.percentages.0 = (simulation_t1.games.0 / constants::NBR_SIMULATION) as f32 * 100.0;
-                simulation_t1.percentages.1 = (simulation_t1.games.1 / constants::NBR_SIMULATION) as f32 * 100.0;
-                simulation_t1.percentages.2 = (simulation_t1.games.2 / constants::NBR_SIMULATION) as f32 * 100.0;
+                simulation_t1.percentages.0 = (simulation_t1.games.0 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
+                simulation_t1.percentages.1 = (simulation_t1.games.1 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
+                simulation_t1.percentages.2 = (simulation_t1.games.2 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
 
                 simulation_t0.nested.push(simulation_t1);
             }
             self.average_game(&mut simulation_t0);
-            self.average_percentage(&mut simulation_t0);
+            self.average_percentage(&mut simulation_t0, pos_first_complexity.len());
             vec_simulation.push(simulation_t0);
         }
         self.display_vec_simulation(&vec_simulation);
