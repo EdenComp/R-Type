@@ -67,7 +67,7 @@ impl GameHandler {
         index.0 as usize
     }
 
-    fn average_game(&mut self, simulation_t0: &mut Simulation) { 
+    fn average_game(&mut self, simulation_t0: &mut Simulation) {
         let mut game = (0, 0, 0);
 
         for i in 0 .. simulation_t0.nested.len() {

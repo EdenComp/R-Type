@@ -39,12 +39,13 @@ impl GameHandler {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::handler::GameHandler;
+    use crate::random::Random;
 
     #[test]
     fn test_basic() {
-        let mut game = GameHandler::new();
+        let mut rand = Random::new(0);
+        let mut game = GameHandler::new(rand);
 
         game.table[0][0] = 1;
         assert_eq!(game.is_move_winning((0, 0)), false);
@@ -52,7 +53,8 @@ mod tests {
 
     #[test]
     fn test_winning() {
-        let mut game = GameHandler::new();
+        let rand = Random::new(0);
+        let mut game = GameHandler::new(rand);
 
         game.table[0][0] = 1;
         game.table[1][0] = 1;
@@ -64,7 +66,8 @@ mod tests {
 
     #[test]
     fn test_winning_diagonal_end() {
-        let mut game = GameHandler::new();
+        let rand = Random::new(0);
+        let mut game = GameHandler::new(rand);
 
         game.table[0][0] = 1;
         game.table[1][1] = 1;
@@ -76,7 +79,8 @@ mod tests {
 
     #[test]
     fn test_other_player() {
-        let mut game = GameHandler::new();
+        let rand = Random::new(0);
+        let mut game = GameHandler::new(rand);
 
         game.table[0][0] = 1;
         game.table[1][0] = 1;
@@ -88,7 +92,8 @@ mod tests {
 
     #[test]
     fn test_four_pieces() {
-        let mut game = GameHandler::new();
+        let rand = Random::new(0);
+        let mut game = GameHandler::new(rand);
 
         game.table[0][0] = 1;
         game.table[1][0] = 1;

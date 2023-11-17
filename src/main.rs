@@ -1,14 +1,21 @@
+use crate::random::Random;
 use std::io::{stdin, BufRead};
 use std::process::ExitCode;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 mod brain;
 mod constants;
 mod game;
 mod handler;
+mod random;
 mod simulation;
 
 fn main() -> ExitCode {
-    let mut handler = handler::GameHandler::new();
+    let millis = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards");
+    let random = Random::new(millis.as_millis());
+    let mut handler = handler::GameHandler::new(random);
     let mut done = false;
 
     while !done {

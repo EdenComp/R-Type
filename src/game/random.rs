@@ -1,6 +1,5 @@
 use crate::game::GameEnd;
 use crate::handler::GameHandler;
-use rand::{thread_rng, Rng};
 
 impl GameHandler {
     pub fn simulate_random_game(&mut self, ai_pos: (i8, i8), enemy_pos: (i8, i8), mut turn: bool) -> GameEnd {
@@ -35,14 +34,13 @@ impl GameHandler {
         }
     }
 
-    fn get_random_move(&self) -> (i8, i8) {
-        let mut random = thread_rng();
+    fn get_random_move(&mut self) -> (i8, i8) {
         let mut x;
         let mut y;
 
         loop {
-            x = random.gen_range(0..self.size.0);
-            y = random.gen_range(0..self.size.1);
+            x = self.random.range_i8(0, self.size.0);
+            y = self.random.range_i8(0, self.size.1);
             if self.table[x as usize][y as usize] == 0 {
                 return (x, y);
             }
