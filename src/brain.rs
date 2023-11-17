@@ -8,13 +8,11 @@ use std::process::exit;
 use std::thread;
 use std::time::Duration;
 
-
 impl GameHandler {
     pub fn get_next_move(&mut self) -> (i8, i8) {
         if self.turns == 0 {
             return self.get_first_move();
         }
-
         let mut rng = thread_rng();
         let mut positions = self.get_positions_to_test();
         // println!("positions: {:?}", positions);
@@ -49,7 +47,6 @@ impl GameHandler {
         let mut max_opponent = 0.0;
 
         // self.display_vec_simulation(vec_simulation);
-
         for i in 0..vec_simulation.len() {
             if vec_simulation[i].percentages.0 > max_ai {
                 max_ai = vec_simulation[i].percentages.0;
@@ -72,7 +69,7 @@ impl GameHandler {
 
     fn average_game(&mut self, simulation_t0: &mut Simulation) { 
         let mut game = (0, 0, 0);
-        
+
         for i in 0 .. simulation_t0.nested.len() {
             game.0 += simulation_t0.nested[i].games.0;
             game.1 += simulation_t0.nested[i].games.1;
@@ -97,7 +94,6 @@ impl GameHandler {
     }
 
     fn simule_next_move(&mut self, positions: &Vec <(i8, i8)>) -> usize {
-
         let mut vec_simulation: Vec<Simulation> = Vec::new();
 
         for i in 0..positions.len() {
@@ -143,7 +139,6 @@ impl GameHandler {
                 }
             }
         }
-
         vec.iter().for_each(|pos| {
             self.table[pos.0 as usize][pos.1 as usize] = 0;
         });
