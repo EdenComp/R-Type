@@ -8,7 +8,6 @@ mod constants;
 mod game;
 mod handler;
 mod random;
-mod simulation;
 
 fn main() -> ExitCode {
     let millis = SystemTime::now()

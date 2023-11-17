@@ -1,21 +1,15 @@
-use crate::handler::GameHandler;
-use crate::simulation::Simulation;
-use crate::game::GameEnd::{Defeat, Draw, Victory};
 use crate::constants;
-use rand::{thread_rng, Rng};
+use crate::game::simulation::Simulation;
+use crate::game::GameEnd::{Defeat, Draw, Victory};
+use crate::handler::GameHandler;
 use std::cmp::{max, min};
-use std::process::exit;
-use std::thread;
-use std::time::Duration;
 
 impl GameHandler {
     pub fn get_next_move(&mut self) -> (i8, i8) {
         if self.turns == 0 {
             return self.get_first_move();
         }
-        let mut rng = thread_rng();
         let mut positions = self.get_positions_to_test();
-        // println!("positions: {:?}", positions);
         let index = self.simule_next_move(&mut positions);
         positions[index]
     }
@@ -70,7 +64,7 @@ impl GameHandler {
     fn average_game(&mut self, simulation_t0: &mut Simulation) {
         let mut game = (0, 0, 0);
 
-        for i in 0 .. simulation_t0.nested.len() {
+        for i in 0..simulation_t0.nested.len() {
             game.0 += simulation_t0.nested[i].games.0;
             game.1 += simulation_t0.nested[i].games.1;
             game.2 += simulation_t0.nested[i].games.2;
@@ -79,9 +73,12 @@ impl GameHandler {
     }
 
     fn average_percentage(&mut self, simulation_t0: &mut Simulation, len: usize) {
-        simulation_t0.percentages.0 = simulation_t0.games.0 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
-        simulation_t0.percentages.1 = simulation_t0.games.1 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
-        simulation_t0.percentages.2 = simulation_t0.games.2 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
+        simulation_t0.percentages.0 =
+            simulation_t0.games.0 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
+        simulation_t0.percentages.1 =
+            simulation_t0.games.1 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
+        simulation_t0.percentages.2 =
+            simulation_t0.games.2 as f32 / (constants::SIMULATIONS_DIVIDER * len as f32) * 100.0;
     }
 
     fn display_vec_simulation(&self, vec_simulation: &Vec<Simulation>) {
@@ -93,7 +90,7 @@ impl GameHandler {
         }
     }
 
-    fn simule_next_move(&mut self, positions: &Vec <(i8, i8)>) -> usize {
+    fn simule_next_move(&mut self, positions: &Vec<(i8, i8)>) -> usize {
         let mut vec_simulation: Vec<Simulation> = Vec::new();
 
         for i in 0..positions.len() {
@@ -102,16 +99,21 @@ impl GameHandler {
             let pos_first_complexity = self.get_positions_to_test();
 
             for k in 0..pos_first_complexity.len() {
-                self.table[pos_first_complexity[k].0 as usize][pos_first_complexity[k].1 as usize] = 2;
+                self.table[pos_first_complexity[k].0 as usize]
+                    [pos_first_complexity[k].1 as usize] = 2;
                 let mut simulation_t1 = Simulation::new(pos_first_complexity[k]);
                 self.simule_win(&mut simulation_t1, &positions[i]);
 
-                simulation_t1.percentages.0 = (simulation_t1.games.0 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
-                simulation_t1.percentages.1 = (simulation_t1.games.1 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
-                simulation_t1.percentages.2 = (simulation_t1.games.2 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
+                simulation_t1.percentages.0 =
+                    (simulation_t1.games.0 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
+                simulation_t1.percentages.1 =
+                    (simulation_t1.games.1 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
+                simulation_t1.percentages.2 =
+                    (simulation_t1.games.2 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
                 // println!("simulation_t1: {:?}", simulation_t1.games);
                 simulation_t0.nested.push(simulation_t1);
-                self.table[pos_first_complexity[k].0 as usize][pos_first_complexity[k].1 as usize] = 0;
+                self.table[pos_first_complexity[k].0 as usize]
+                    [pos_first_complexity[k].1 as usize] = 0;
             }
             self.average_game(&mut simulation_t0);
             self.average_percentage(&mut simulation_t0, pos_first_complexity.len());

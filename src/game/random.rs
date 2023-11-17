@@ -2,7 +2,12 @@ use crate::game::GameEnd;
 use crate::handler::GameHandler;
 
 impl GameHandler {
-    pub fn simulate_random_game(&mut self, ai_pos: (i8, i8), enemy_pos: (i8, i8), mut turn: bool) -> GameEnd {
+    pub fn simulate_random_game(
+        &mut self,
+        ai_pos: (i8, i8),
+        enemy_pos: (i8, i8),
+        mut turn: bool,
+    ) -> GameEnd {
         let ai_won = self.is_move_winning(ai_pos);
         if ai_won {
             return GameEnd::Victory;

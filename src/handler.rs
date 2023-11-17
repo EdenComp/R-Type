@@ -32,8 +32,6 @@ impl GameHandler {
             functions,
             max_memory: constants::DEFAULT_MAX_MEMORY,
             timeout_turn: constants::DEFAULT_TIMEOUT_TURN,
-            // TODO Fixed size
-            // https://github.com/EdenComp/R-Type/issues/5
             size: (20, 20),
             table: [[0i8; 20]; 20],
             state: [[0i8; 20]; 20],
@@ -141,8 +139,6 @@ impl GameHandler {
     fn start(&mut self, args: &str) {
         match args.parse::<i8>() {
             Ok(size) => {
-                // TODO Fixed size
-                // https://github.com/EdenComp/R-Type/issues/5
                 if size != constants::DEFAULT_SIZE {
                     self.error("Invalid size")
                 }
