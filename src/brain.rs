@@ -52,7 +52,7 @@ impl GameHandler {
                 max_ai = vec_simulation[i].percentages.0;
                 index.0 = i;
             }
-            if vec_simulation[i].percentages.1 < max_opponent {
+            if vec_simulation[i].percentages.1 > max_opponent {
                 max_opponent = vec_simulation[i].percentages.1;
                 index.1 = i;
             }
@@ -119,7 +119,6 @@ impl GameHandler {
             self.table[positions[i].0 as usize][positions[i].1 as usize] = 0;
         }
         let index = self.analyze_best_move(&vec_simulation);
-        self.display_vec_simulation(&vec_simulation);
         index
     }
 
