@@ -1,5 +1,8 @@
+mod analyse;
 mod random;
-pub mod simulation;
+mod scan;
+mod simulation;
+pub mod types;
 mod win;
 
 pub enum GameEnd {

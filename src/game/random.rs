@@ -4,17 +4,13 @@ use crate::handler::GameHandler;
 impl GameHandler {
     pub fn simulate_random_game(
         &mut self,
-        ai_pos: (i8, i8),
-        enemy_pos: (i8, i8),
+        ai_pos: &(i8, i8),
+        enemy_pos: &(i8, i8),
         mut turn: bool,
     ) -> GameEnd {
-        let ai_won = self.is_move_winning(ai_pos);
-        if ai_won {
-            return GameEnd::Victory;
-        }
-        let enemy_won = self.is_move_winning(enemy_pos);
-        if enemy_won {
-            return GameEnd::Defeat;
+        let early_end = self.check_current_state(ai_pos, enemy_pos);
+        if early_end.is_some() {
+            return early_end.unwrap();
         }
 
         let mut winning = false;
@@ -37,6 +33,18 @@ impl GameHandler {
         } else {
             GameEnd::Victory
         }
+    }
+
+    fn check_current_state(&self, ai_pos: &(i8, i8), enemy_pos: &(i8, i8)) -> Option<GameEnd> {
+        let ai_won = self.is_move_winning(*ai_pos);
+        if ai_won {
+            return Some(GameEnd::Victory);
+        }
+        let enemy_won = self.is_move_winning(*enemy_pos);
+        if enemy_won {
+            return Some(GameEnd::Defeat);
+        }
+        None
     }
 
     fn get_random_move(&mut self) -> (i8, i8) {
