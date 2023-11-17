@@ -44,19 +44,30 @@ impl GameHandler {
     }
 
     fn analyze_best_move(&mut self, vec_simulation: &Vec<Simulation>) -> usize {
-        let mut index = 0;
-        let mut max = 0.0;
+        let mut index = (0, 0);
+        let mut max_ai = 0.0;
+        let mut max_opponent = 0.0;
 
         // self.display_vec_simulation(vec_simulation);
 
         for i in 0..vec_simulation.len() {
-            if vec_simulation[i].percentages.0 > max {
-                max = vec_simulation[i].percentages.0;
-                index = i;
+            if vec_simulation[i].percentages.0 > max_ai {
+                max_ai = vec_simulation[i].percentages.0;
+                index.0 = i;
+            }
+            if vec_simulation[i].percentages.1 < max_opponent {
+                max_opponent = vec_simulation[i].percentages.1;
+                index.1 = i;
             }
         }
+        if max_opponent == 100.0 {
+            return index.1 as usize;
+        }
+        if max_ai > max_opponent {
+            return index.0 as usize;
+        }
         // println!("index: {}", index);
-        index
+        index.0 as usize
     }
 
     fn average_game(&mut self, simulation_t0: &mut Simulation) { 
@@ -112,6 +123,7 @@ impl GameHandler {
             self.table[positions[i].0 as usize][positions[i].1 as usize] = 0;
         }
         let index = self.analyze_best_move(&vec_simulation);
+        self.display_vec_simulation(&vec_simulation);
         index
     }
 
