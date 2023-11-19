@@ -15,6 +15,7 @@ pub struct GameHandler {
     board: bool,
     max_memory: i32,
     timeout_turn: i32,
+    pub vec_empty_pos: Vec<(i8, i8)>,
 }
 
 impl GameHandler {
@@ -39,6 +40,7 @@ impl GameHandler {
             max_turns: 400,
             board: false,
             random,
+            vec_empty_pos: Vec::new(),
         }
     }
 

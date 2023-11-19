@@ -5,18 +5,15 @@ use crate::handler::GameHandler;
 impl GameHandler {
     pub fn simulate_next_move(&mut self, positions: &Vec<(i8, i8)>) -> usize {
         let mut vec_simulation: Vec<Simulation> = Vec::new();
-
         for i in 0..positions.len() {
             let mut simulation_t0 = Simulation::new(positions[i]);
             self.table[positions[i].0 as usize][positions[i].1 as usize] = 1;
             let pos_first_complexity = self.get_positions_to_test();
-
             for k in 0..pos_first_complexity.len() {
                 self.table[pos_first_complexity[k].0 as usize]
                     [pos_first_complexity[k].1 as usize] = 2;
                 let mut simulation_t1 = NestedSimulation::new(pos_first_complexity[k]);
                 self.simulate_games(&mut simulation_t1, &positions[i]);
-
                 simulation_t1.calculate_percentages();
                 simulation_t0.nested.push(simulation_t1);
                 self.table[pos_first_complexity[k].0 as usize]
