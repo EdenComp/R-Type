@@ -40,14 +40,12 @@ impl GameHandler {
         // let early_end = self.check_current_state(ai_pos, enemy_pos);
         // if early_end.is_some() {
         //     println!("early end");
-        //     // thread::sleep(Duration::from_millis(100000));
         //     return early_end.unwrap();
         // }
 
         let mut winning = false;
         let mut pos;
         let mut index;
-        self.get_empty_pos_in_table();
 
         while !winning {
             index = self.get_random_move();
@@ -57,23 +55,14 @@ impl GameHandler {
             pos = self.vec_empty_pos[index.unwrap()];
             self.table[pos.0 as usize][pos.1 as usize] = if turn { 1 } else { 2 };
             turn = !turn;
-            // self.display_table(self.table, self.size);
             winning = self.is_move_winning(pos);
-            // thread::sleep(Duration::from_millis(1500));
             self.vec_empty_pos.remove(index.unwrap());
         }
-        // println!("-------------------------1---------------------------1");
         // self.display_table(self.table, self.size);
-        // println!("\n");
         self.restore_table();
-        // print!("turn: {} ", turn);
         if turn {
-            // println!("Defeat");
-            // println!("-------------------------2---------------------------2");
             return GameEnd::Defeat
         } else {
-            // println!("Victory");
-            // println!("-------------------------2---------------------------2");
             return GameEnd::Victory
         }
 

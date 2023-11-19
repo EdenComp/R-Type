@@ -34,7 +34,8 @@ impl GameHandler {
     }
 
     fn simulate_games(&mut self, simulation_t1: &mut NestedSimulation, ai_pos: &(i8, i8)) {
-        for _ in 0..constants::SIMULATIONS_AMOUNT {
+        self.get_empty_pos_in_table();
+        for i in 0..constants::SIMULATIONS_AMOUNT {
             let index = self.simulate_random_game(ai_pos, &simulation_t1.next_move, true);
             simulation_t1.add_game(index);
         }
