@@ -4,20 +4,21 @@ use crate::handler::GameHandler;
 impl GameHandler {
     pub fn simulate_random_game(&mut self, mut turn: bool) -> GameEnd {
         let mut winning = false;
-        let mut pos: (i8, i8);
-        let mut turns: i32 = self.turns;
+        let mut position;
+        let mut simulation_turns = self.turns;
 
-        while !winning {
-            if turns == self.max_turns {
-                return GameEnd::Draw;
-            }
-            pos = self.get_random_move();
-            self.table[pos.0 as usize][pos.1 as usize] = if turn { 1 } else { 2 };
-            turns += 1;
+        while !winning && simulation_turns < self.max_turns {
+            position = self.get_next_random_pos();
+            self.table[position.0 as usize][position.1 as usize] = if turn { 1 } else { 2 };
             turn = !turn;
-            winning = self.is_move_winning(pos);
+            simulation_turns += 1;
+            winning = self.is_move_winning(&position);
         }
         self.restore_table();
+
+        if simulation_turns == self.max_turns {
+            return GameEnd::Draw;
+        }
         if turn {
             GameEnd::Defeat
         } else {
@@ -25,17 +26,15 @@ impl GameHandler {
         }
     }
 
-    fn get_random_move(&mut self) -> (i8, i8) {
-        let mut x;
-        let mut y;
+    fn get_next_random_pos(&mut self) -> (i8, i8) {
+        let mut index = self.random.range(0, self.remaining_turns);
+        let mut pos = self.empty_positions[index];
 
-        loop {
-            x = self.random.range_i8(0, self.size.0);
-            y = self.random.range_i8(0, self.size.1);
-            if self.table[x as usize][y as usize] == 0 {
-                return (x, y);
-            }
+        while self.table[pos.0 as usize][pos.1 as usize] != 0 {
+            index = self.random.range(0, self.remaining_turns);
+            pos = self.empty_positions[index];
         }
+        pos
     }
 
     fn restore_table(&mut self) {

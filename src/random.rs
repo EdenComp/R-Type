@@ -10,14 +10,13 @@ impl Random {
         Random { last_number: seed }
     }
 
-    pub fn range(&mut self, min: usize, max: usize) -> usize {
-        self.last_number = self.last_number * RANDOM_MULTIPLIER + RANDOM_ADDITION;
-        (self.last_number % max as u128 + min as u128) as usize
+    fn rand(&mut self) {
+        self.last_number = self.last_number * RANDOM_MULTIPLIER + RANDOM_ADDITION
     }
 
-    pub fn range_i8(&mut self, min: i8, max: i8) -> i8 {
-        self.last_number = self.last_number * RANDOM_MULTIPLIER + RANDOM_ADDITION;
-        (self.last_number % max as u128 + min as u128) as i8
+    pub fn range(&mut self, min: usize, max: usize) -> usize {
+        self.rand();
+        (self.last_number % max as u128 + min as u128) as usize
     }
 }
 
@@ -29,6 +28,7 @@ mod tests {
     fn test_basic() {
         let mut random = Random::new(0);
         let mut random2 = Random::new(1);
+
         let num1 = random.range(0, 100);
         let num2 = random.range(0, 100);
 
