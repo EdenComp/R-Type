@@ -5,9 +5,7 @@ impl GameHandler {
         if self.turns == 0 {
             return self.get_first_move();
         }
-        let mut positions = self.get_positions_to_test();
-        let index = self.simulate_next_move(&mut positions);
-        positions[index]
+        self.simulate_next_move()
     }
 
     fn get_first_move(&self) -> (i8, i8) {

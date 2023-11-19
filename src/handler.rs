@@ -2,20 +2,19 @@ use crate::constants;
 use crate::random::Random;
 use std::collections::HashMap;
 
-// TODO Fixed size
-// https://github.com/EdenComp/R-Type/issues/5
 pub struct GameHandler {
     pub table: [[i8; 20]; 20],
     pub state: [[i8; 20]; 20],
     pub size: (i8, i8),
     pub turns: i32,
     pub max_turns: i32,
+    pub remaining_turns: usize,
     pub random: Random,
+    pub empty_positions: Vec<(i8, i8)>,
     functions: HashMap<String, fn(&mut GameHandler, &str)>,
     board: bool,
     max_memory: i32,
     timeout_turn: i32,
-    pub vec_empty_pos: Vec<(i8, i8)>,
 }
 
 impl GameHandler {
@@ -29,6 +28,13 @@ impl GameHandler {
         functions.insert(constants::START_COMMAND.to_string(), GameHandler::start);
         functions.insert(constants::TURN_COMMAND.to_string(), GameHandler::turn);
 
+        let mut empty_positions: Vec<(i8, i8)> = Vec::new();
+        for x in 0..20 {
+            for y in 0..20 {
+                empty_positions.push((x, y));
+            }
+        }
+
         GameHandler {
             functions,
             max_memory: constants::DEFAULT_MAX_MEMORY,
@@ -37,10 +43,11 @@ impl GameHandler {
             table: [[0i8; 20]; 20],
             state: [[0i8; 20]; 20],
             turns: 0,
+            remaining_turns: 400,
             max_turns: 400,
             board: false,
             random,
-            vec_empty_pos: Vec::new(),
+            empty_positions,
         }
     }
 
@@ -102,6 +109,8 @@ impl GameHandler {
     fn register_turn(&mut self, pos: (i8, i8), me: bool) {
         self.table[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
         self.state[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
+        self.empty_positions.push(pos);
+        self.remaining_turns -= 1;
         self.turns += 1;
     }
 

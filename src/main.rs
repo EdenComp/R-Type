@@ -12,7 +12,7 @@ mod random;
 fn main() -> ExitCode {
     let millis = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards");
+        .expect("Error getting time");
     let random = Random::new(millis.as_millis());
     let mut handler = handler::GameHandler::new(random);
     let mut done = false;
