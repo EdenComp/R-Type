@@ -19,7 +19,7 @@ impl Random {
     //     (self.last_number % max as u128 + min as u128) as usize
     // }
 
-    pub fn random_in_empty_pos(&mut self, vec_empty_pos: &Vec<(i8, i8)>) -> usize {
+    pub fn random_in_empty_pos(&mut self, vec_empty_pos: &Vec<(i8, i8)>) -> Result<usize, ()> {
         let seed = SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
             .expect("Error get time")
@@ -30,9 +30,9 @@ impl Random {
         let rng = hasher.finish();
 
         if !vec_empty_pos.is_empty() {
-            return rng as usize % vec_empty_pos.len();
+            return Ok (rng as usize % vec_empty_pos.len());
         }
-        100000
+        Err(())
     }
 }
 

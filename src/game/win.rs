@@ -56,11 +56,11 @@ mod tests {
         let rand = Random::new(0);
         let mut game = GameHandler::new(rand);
 
-        game.table[0][0] = 1;
-        game.table[1][0] = 1;
-        game.table[2][0] = 1;
-        game.table[3][0] = 1;
-        game.table[4][0] = 1;
+        game.table[0][0] = 2;
+        game.table[1][0] = 2;
+        game.table[2][0] = 2;
+        game.table[3][0] = 2;
+        game.table[4][0] = 2;
         assert_eq!(game.is_move_winning((2, 0)), true);
     }
 

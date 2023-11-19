@@ -1,6 +1,8 @@
 use crate::constants;
 use crate::game::types::{NestedSimulation, Simulation};
 use crate::handler::GameHandler;
+use std::thread;
+use std::time::Duration;
 
 impl GameHandler {
     pub fn simulate_next_move(&mut self, positions: &Vec<(i8, i8)>) -> usize {
@@ -10,6 +12,7 @@ impl GameHandler {
             self.table[positions[i].0 as usize][positions[i].1 as usize] = 1;
             let pos_first_complexity = self.get_positions_to_test();
             for k in 0..pos_first_complexity.len() {
+                // println!("---------------SECOND LOOP----------");
                 self.table[pos_first_complexity[k].0 as usize]
                     [pos_first_complexity[k].1 as usize] = 2;
                 let mut simulation_t1 = NestedSimulation::new(pos_first_complexity[k]);
@@ -23,7 +26,9 @@ impl GameHandler {
             simulation_t0.self_simulation.calculate_percentages();
             vec_simulation.push(simulation_t0);
             self.table[positions[i].0 as usize][positions[i].1 as usize] = 0;
+            // println!("---------------FIRST LOOP----------");
         }
+        // println!("---------------FINAL----------");
         let index = self.analyze_best_move(&vec_simulation);
         index
     }
