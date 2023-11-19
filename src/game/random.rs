@@ -42,7 +42,7 @@ impl GameHandler {
         //     println!("early end");
         //     return early_end.unwrap();
         // }
-
+        
         let mut winning = false;
         let mut pos;
         let mut index;
@@ -58,7 +58,6 @@ impl GameHandler {
             winning = self.is_move_winning(pos);
             self.vec_empty_pos.remove(index.unwrap());
         }
-        // self.display_table(self.table, self.size);
         self.restore_table();
         if turn {
             return GameEnd::Defeat
@@ -81,7 +80,7 @@ impl GameHandler {
     }
 
     fn get_random_move(&mut self) -> Result<usize, ()> {
-        let mut index = self.random.random_in_empty_pos(&self.vec_empty_pos);
+        let index = self.random.random_in_empty_pos(&self.vec_empty_pos);
 
         match index {
             Ok(index) => Ok(index),
@@ -89,7 +88,7 @@ impl GameHandler {
         }
     }
 
-    fn restore_table(&mut self) {
+    pub fn restore_table(&mut self) {
         for x in 0..self.size.0 as usize {
             for y in 0..self.size.1 as usize {
                 self.table[x][y] = self.state[x][y];

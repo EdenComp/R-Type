@@ -5,13 +5,15 @@ impl GameHandler {
 
     pub fn display_simulation(&self, vec_simulation: &Vec<Simulation>) {
         for i in 0..vec_simulation.len() {
+            println!("{}: {:?}", i, vec_simulation[i].self_simulation.next_move);
             println!("{}: {:?}", i, vec_simulation[i].self_simulation.games);
+            println!()
         }
     }
 
     pub fn analyze_best_move(&mut self, vec_simulation: &Vec<Simulation>) -> usize {
 
-        // self.display_simulation(vec_simulation);
+        self.display_simulation(vec_simulation);
 
         let mut index = (0, 0);
         let mut max_ai = 0.0;
