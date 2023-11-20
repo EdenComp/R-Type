@@ -8,29 +8,32 @@ impl GameHandler {
         let mut vec_simulation: Vec<Simulation> = Vec::new();
 
         for ai_pos in ai_positions.iter() {
-            let mut simulation_t0 = Simulation::new(*ai_pos);
+            self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 2;
+            if self.is_move_winning(ai_pos) {
+                return *ai_pos;
+            }
             self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 1;
             if self.is_move_winning(ai_pos) {
                 return *ai_pos;
             }
+            self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 0;
 
+            let mut simulation_t0 = Simulation::new(*ai_pos);
             let enemy_positions = self.get_positions_to_test();
             for enemy_pos in enemy_positions.iter() {
-                self.table[enemy_pos.0 as usize][enemy_pos.1 as usize] = 2;
-                if self.is_move_winning(enemy_pos) {
-                    return *enemy_pos;
-                }
-
-                let mut simulation_t1 = NestedSimulation::new(*enemy_pos);
-                self.simulate_games(&mut simulation_t1, ai_pos);
-                simulation_t1.calculate_percentages();
-                simulation_t0.nested.push(simulation_t1);
+                simulation_t0.nested.push(NestedSimulation::new(*enemy_pos));
             }
-
-            self.combine_results(&mut simulation_t0);
-            simulation_t0.self_simulation.calculate_percentages();
             vec_simulation.push(simulation_t0);
         }
+
+        vec_simulation.iter_mut().for_each(|simulation_t0| {
+            simulation_t0.nested.iter_mut().for_each(|simulation_t1| {
+                self.simulate_games(simulation_t1, &simulation_t0.self_simulation.next_move);
+                simulation_t1.calculate_percentages();
+            });
+            self.combine_results(simulation_t0);
+            simulation_t0.self_simulation.calculate_percentages();
+        });
 
         ai_positions[self.analyze_best_move(&vec_simulation)]
     }

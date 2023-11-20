@@ -14,7 +14,7 @@ impl GameHandler {
             simulation_turns += 1;
             winning = self.is_move_winning(&position);
         }
-        self.restore_table();
+        self.table.copy_from_slice(&self.state);
 
         if simulation_turns == self.max_turns {
             return GameEnd::Draw;
@@ -35,13 +35,5 @@ impl GameHandler {
             pos = self.empty_positions[index];
         }
         pos
-    }
-
-    fn restore_table(&mut self) {
-        for x in 0..self.size.0 as usize {
-            for y in 0..self.size.1 as usize {
-                self.table[x][y] = self.state[x][y];
-            }
-        }
     }
 }
