@@ -183,7 +183,7 @@ fn parse_position(pos: &str) -> Option<(i8, i8)> {
             let (x, y) = str;
             match (x.parse::<i8>(), y.parse::<i8>()) {
                 (Ok(x), Ok(y)) => {
-                    if x < 0 || x > 19 || y < 0 || y > 19 {
+                    if x < 0 || x >= 20 || y < 0 || y >= 20 {
                         return None;
                     }
                     Some((x, y))
@@ -210,7 +210,7 @@ fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
             if p != 1 && p != 2 {
                 return None;
             }
-            if x < 0 || x > 19 || y < 0 || y > 19 {
+            if x < 0 || x >= 20 || y < 0 || y >= 20 {
                 return None;
             }
             Some(((x, y), p == 1))
