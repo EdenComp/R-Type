@@ -1,6 +1,6 @@
-use crate::handler::GameHandler;
+use crate::game::GameData;
 
-impl GameHandler {
+impl GameData {
     pub fn get_next_move(&mut self) -> (i8, i8) {
         if self.turns == 0 {
             return self.get_first_move();

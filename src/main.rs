@@ -8,15 +8,14 @@ mod constants;
 mod game;
 mod handler;
 mod random;
+mod threads;
 
 fn main() -> ExitCode {
-    eprintln!("There is {} cores", std::thread::available_parallelism().unwrap().get());
-    let millis = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Error getting time");
+    let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
     let random = Random::new(millis.as_millis());
     let mut handler = handler::GameHandler::new(random);
     let mut done = false;
+    let mut code = 0;
 
     while !done {
         match stdin().lock().lines().next() {
@@ -25,12 +24,14 @@ fn main() -> ExitCode {
             }
             Some(Err(e)) => {
                 eprintln!("Error: {}", e);
-                return ExitCode::from(84);
+                code = 84;
+                done = true;
             }
             None => {
                 done = true;
             }
         }
     }
-    ExitCode::from(0)
+    handler.thread_pool.stop_threads();
+    ExitCode::from(code)
 }

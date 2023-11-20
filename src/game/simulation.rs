@@ -1,11 +1,11 @@
 use crate::constants;
+use crate::game::GameData;
 use crate::game::types::{NestedSimulation, Simulation};
-use crate::handler::GameHandler;
 
-impl GameHandler {
+impl GameData {
     pub fn simulate_next_move(&mut self) -> (i8, i8) {
         let ai_positions = self.get_positions_to_test();
-        let mut vec_simulation: Vec<Simulation> = Vec::new();
+        let mut simulations: Vec<Simulation> = Vec::new();
 
         for ai_pos in ai_positions.iter() {
             self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 2;
@@ -23,10 +23,15 @@ impl GameHandler {
             for enemy_pos in enemy_positions.iter() {
                 simulation_t0.nested.push(NestedSimulation::new(*enemy_pos));
             }
-            vec_simulation.push(simulation_t0);
+            simulations.push(simulation_t0);
         }
 
-        vec_simulation.iter_mut().for_each(|simulation_t0| {
+        self.launch_simulations(&mut simulations);
+        ai_positions[self.analyze_best_move(&simulations)]
+    }
+
+    fn launch_simulations(&mut self, simulations: &mut [Simulation]) {
+        simulations.iter_mut().for_each(|simulation_t0| {
             simulation_t0.nested.iter_mut().for_each(|simulation_t1| {
                 self.simulate_games(simulation_t1, &simulation_t0.self_simulation.next_move);
                 simulation_t1.calculate_percentages();
@@ -34,8 +39,6 @@ impl GameHandler {
             self.combine_results(simulation_t0);
             simulation_t0.self_simulation.calculate_percentages();
         });
-
-        ai_positions[self.analyze_best_move(&vec_simulation)]
     }
 
     fn simulate_games(&mut self, simulation_t1: &mut NestedSimulation, ai_pos: &(i8, i8)) {

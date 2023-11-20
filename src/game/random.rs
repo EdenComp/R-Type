@@ -1,7 +1,6 @@
-use crate::game::GameEnd;
-use crate::handler::GameHandler;
+use crate::game::{GameData, GameEnd};
 
-impl GameHandler {
+impl GameData {
     pub fn simulate_random_game(&mut self, mut turn: bool) -> GameEnd {
         let mut winning = false;
         let mut position;
