@@ -166,6 +166,7 @@ impl GameHandler {
             }
             None => {
                 self.error("Invalid position");
+                return;
             }
         }
         let new_move = self.get_next_move();
@@ -180,7 +181,12 @@ fn parse_position(pos: &str) -> Option<(i8, i8)> {
         Some(str) => {
             let (x, y) = str;
             match (x.parse::<i8>(), y.parse::<i8>()) {
-                (Ok(x), Ok(y)) => Some((x, y)),
+                (Ok(x), Ok(y)) => {
+                    if x < 0 || x > 19 || y < 0 || y > 19 {
+                        return None;
+                    }
+                    Some((x, y))
+                }
                 _ => None,
             }
         }
