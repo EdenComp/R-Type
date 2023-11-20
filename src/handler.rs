@@ -151,7 +151,8 @@ impl GameHandler {
         match args.parse::<i8>() {
             Ok(size) => {
                 if size != constants::DEFAULT_SIZE {
-                    self.error("Invalid size")
+                    self.error("Invalid size");
+                    return;
                 }
                 println!("{}", constants::OK_RESPONSE)
             }
@@ -207,6 +208,9 @@ fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
     ) {
         (Ok(x), Ok(y), Ok(p)) => {
             if p != 1 && p != 2 {
+                return None;
+            }
+            if x < 0 || x > 19 || y < 0 || y > 19 {
                 return None;
             }
             Some(((x, y), p == 1))
