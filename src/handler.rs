@@ -218,3 +218,19 @@ fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
         _ => None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    use crate::handler::GameHandler;
+    use crate::random::Random;
+
+    #[test]
+    fn test_start() {
+        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
+        let random = Random::new(millis.as_millis());
+        let mut game = GameHandler::new(random);
+        game.start("20");
+        assert_eq!(game.board, false);
+    }
+}
