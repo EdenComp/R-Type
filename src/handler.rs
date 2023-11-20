@@ -251,4 +251,31 @@ mod tests {
         game.info("info");
         assert_eq!(game.board, false);
     }
+
+    #[test]
+    fn test_about() {
+        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
+        let random = Random::new(millis.as_millis());
+        let mut game = GameHandler::new(random);
+        game.about("");
+        assert_eq!(game.board, false);
+    }
+
+    #[test]
+    fn test_begin() {
+        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
+        let random = Random::new(millis.as_millis());
+        let mut game = GameHandler::new(random);
+        game.begin("");
+        assert_eq!(game.board, false);
+    }
+
+    #[test]
+    fn test_end() {
+        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
+        let random = Random::new(millis.as_millis());
+        let mut game = GameHandler::new(random);
+        game.end("");
+        assert_eq!(game.board, false);
+    }
 }
