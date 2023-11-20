@@ -10,6 +10,7 @@ mod handler;
 mod random;
 
 fn main() -> ExitCode {
+    eprintln!("There is {} cores", std::thread::available_parallelism().unwrap().get());
     let millis = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("Error getting time");
