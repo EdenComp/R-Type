@@ -233,4 +233,22 @@ mod tests {
         game.start("20");
         assert_eq!(game.board, false);
     }
+
+    #[test]
+    fn test_board() {
+        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
+        let random = Random::new(millis.as_millis());
+        let mut game = GameHandler::new(random);
+        game.board("");
+        assert_eq!(game.board, true);
+    }
+
+    #[test]
+    fn test_info() {
+        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
+        let random = Random::new(millis.as_millis());
+        let mut game = GameHandler::new(random);
+        game.info("info");
+        assert_eq!(game.board, false);
+    }
 }
