@@ -3,11 +3,12 @@ use crate::game::types::{NestedSimulation, Simulation};
 use crate::handler::GameHandler;
 
 impl GameHandler {
+
     pub fn simulate_next_move(&mut self) -> (i8, i8) {
         let ai_positions = self.get_positions_to_test();
         let mut vec_simulation: Vec<Simulation> = Vec::new();
 
-        for ai_pos in ai_positions.iter() {
+        for (idx, ai_pos) in ai_positions.iter().enumerate() {
             self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 2;
             if self.is_move_winning(ai_pos) {
                 return *ai_pos;
@@ -16,10 +17,13 @@ impl GameHandler {
             if self.is_move_winning(ai_pos) {
                 return *ai_pos;
             }
-            self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 0;
 
+            self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 0;
+            
             let mut simulation_t0 = Simulation::new(*ai_pos);
-            let enemy_positions = self.get_positions_to_test();
+            let mut enemy_positions = ai_positions.clone();
+            enemy_positions.remove(idx);
+            
             for enemy_pos in enemy_positions.iter() {
                 simulation_t0.nested.push(NestedSimulation::new(*enemy_pos));
             }
