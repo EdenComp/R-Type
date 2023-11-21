@@ -1,6 +1,7 @@
 const RANDOM_MULTIPLIER: u128 = 25214903917;
 const RANDOM_ADDITION: u128 = 11;
 
+#[derive(Clone)]
 pub struct Random {
     last_number: u128,
 }

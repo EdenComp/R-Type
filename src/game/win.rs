@@ -1,6 +1,6 @@
-use crate::handler::GameHandler;
+use crate::game::GameData;
 
-impl GameHandler {
+impl GameData {
     pub fn is_move_winning(&self, pos: &(i8, i8)) -> bool {
         let mut array: [i8; 9] = [0; 9];
 
@@ -39,13 +39,14 @@ impl GameHandler {
 
 #[cfg(test)]
 mod tests {
+    use crate::game::GameData;
     use crate::handler::GameHandler;
     use crate::random::Random;
 
     #[test]
     fn test_basic() {
         let mut rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
 
         game.table[0][0] = 1;
         assert_eq!(game.is_move_winning(&(0, 0)), false);
@@ -54,7 +55,7 @@ mod tests {
     #[test]
     fn test_winning() {
         let rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
 
         game.table[0][0] = 2;
         game.table[1][0] = 2;
@@ -67,7 +68,7 @@ mod tests {
     #[test]
     fn test_winning_diagonal_end() {
         let rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
 
         game.table[0][0] = 1;
         game.table[1][1] = 1;
@@ -80,7 +81,7 @@ mod tests {
     #[test]
     fn test_other_player() {
         let rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
 
         game.table[0][0] = 1;
         game.table[1][0] = 1;
@@ -93,7 +94,7 @@ mod tests {
     #[test]
     fn test_four_pieces() {
         let rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
 
         game.table[0][0] = 1;
         game.table[1][0] = 1;

@@ -1,7 +1,7 @@
 use crate::game::types::Simulation;
-use crate::handler::GameHandler;
+use crate::game::GameData;
 
-impl GameHandler {
+impl GameData {
     pub fn analyze_best_move(&mut self, vec_simulation: &[Simulation]) -> usize {
         let mut final_idx = 0;
         let mut max_ai = 0.0;

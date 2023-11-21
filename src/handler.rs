@@ -1,20 +1,14 @@
 use crate::constants;
+use crate::game::GameData;
 use crate::random::Random;
+use crate::threads::ThreadPool;
 use std::collections::HashMap;
 
 pub struct GameHandler {
-    pub table: [[i8; 20]; 20],
-    pub state: [[i8; 20]; 20],
-    pub size: (i8, i8),
-    pub turns: i32,
-    pub max_turns: i32,
-    pub remaining_turns: usize,
-    pub random: Random,
-    pub empty_positions: Vec<(i8, i8)>,
-    functions: HashMap<String, fn(&mut GameHandler, &str)>,
+    pub thread_pool: ThreadPool,
+    game_data: GameData,
     board: bool,
-    max_memory: i32,
-    timeout_turn: i32,
+    functions: HashMap<String, fn(&mut GameHandler, &str)>,
 }
 
 impl GameHandler {
@@ -28,26 +22,11 @@ impl GameHandler {
         functions.insert(constants::START_COMMAND.to_string(), GameHandler::start);
         functions.insert(constants::TURN_COMMAND.to_string(), GameHandler::turn);
 
-        let mut empty_positions: Vec<(i8, i8)> = Vec::new();
-        for x in 0..20 {
-            for y in 0..20 {
-                empty_positions.push((x, y));
-            }
-        }
-
         GameHandler {
-            functions,
-            max_memory: constants::DEFAULT_MAX_MEMORY,
-            timeout_turn: constants::DEFAULT_TIMEOUT_TURN,
-            size: (20, 20),
-            table: [[0i8; 20]; 20],
-            state: [[0i8; 20]; 20],
-            turns: 0,
-            remaining_turns: 400,
-            max_turns: 400,
+            thread_pool: ThreadPool::new(),
+            game_data: GameData::new(random),
             board: false,
-            random,
-            empty_positions,
+            functions,
         }
     }
 
@@ -107,11 +86,11 @@ impl GameHandler {
     }
 
     fn register_turn(&mut self, pos: (i8, i8), me: bool) {
-        self.table[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
-        self.state[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
-        self.empty_positions.push(pos);
-        self.remaining_turns -= 1;
-        self.turns += 1;
+        self.game_data.table[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
+        self.game_data.state[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
+        self.game_data.empty_positions.push(pos);
+        self.game_data.remaining_turns -= 1;
+        self.game_data.turns += 1;
     }
 
     fn about(&mut self, _args: &str) {
@@ -125,19 +104,19 @@ impl GameHandler {
     }
 
     fn begin(&mut self, _args: &str) {
-        let new_move = self.get_next_move();
+        let new_move = self.game_data.get_next_move(&mut self.thread_pool);
 
         self.register_turn(new_move, true);
         self.broadcast_turn(new_move);
     }
 
     fn board(&mut self, _args: &str) {
-        self.table.iter_mut().for_each(|row| {
+        self.game_data.table.iter_mut().for_each(|row| {
             row.iter_mut().for_each(|cell| {
                 *cell = 0;
             })
         });
-        self.turns = 0;
+        self.game_data.turns = 0;
         self.board = true;
     }
 
@@ -168,7 +147,7 @@ impl GameHandler {
                 self.error("Invalid position");
             }
         }
-        let new_move = self.get_next_move();
+        let new_move = self.game_data.get_next_move(&mut self.thread_pool);
 
         self.register_turn(new_move, true);
         self.broadcast_turn(new_move);
