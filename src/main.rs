@@ -8,6 +8,7 @@ mod constants;
 mod game;
 mod handler;
 mod random;
+mod threads;
 
 fn main() -> ExitCode {
     let millis = SystemTime::now()
@@ -16,6 +17,7 @@ fn main() -> ExitCode {
     let random = Random::new(millis.as_millis());
     let mut handler = handler::GameHandler::new(random);
     let mut done = false;
+    let mut code = 0;
 
     while !done {
         match stdin().lock().lines().next() {
@@ -24,12 +26,14 @@ fn main() -> ExitCode {
             }
             Some(Err(e)) => {
                 eprintln!("Error: {}", e);
-                return ExitCode::from(84);
+                code = 84;
+                done = true;
             }
             None => {
                 done = true;
             }
         }
     }
-    ExitCode::from(0)
+    handler.thread_pool.stop_threads();
+    ExitCode::from(code)
 }

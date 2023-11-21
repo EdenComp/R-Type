@@ -3,8 +3,8 @@ pub static BRAIN_VERSION: &str = "0.1.0";
 pub static BRAIN_AUTHOR: &str = "Mehdi Taha Tion";
 pub static BRAIN_COUNTRY: &str = "France";
 
-pub const DEFAULT_MAX_MEMORY: i32 = 70000000;
-pub const DEFAULT_TIMEOUT_TURN: i32 = 5000;
+pub const _DEFAULT_MAX_MEMORY: i32 = 70000000;
+pub const _DEFAULT_TIMEOUT_TURN: i32 = 5000;
 pub const DEFAULT_SIZE: i8 = 20;
 
 pub static ABOUT_COMMAND: &str = "ABOUT";
@@ -22,5 +22,5 @@ pub static ERROR_RESPONSE: &str = "ERROR";
 pub static OK_RESPONSE: &str = "OK";
 pub static UNKNOWN_RESPONSE: &str = "UNKNOWN";
 
-pub static SIMULATIONS_AMOUNT: i32 = 1000;
+pub static SIMULATIONS_AMOUNT: i32 = 500;
 pub static SIMULATIONS_DIVIDER: f32 = SIMULATIONS_AMOUNT as f32;

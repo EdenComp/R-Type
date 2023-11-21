@@ -1,7 +1,7 @@
-use crate::handler::GameHandler;
+use crate::game::GameData;
 use std::cmp::{max, min};
 
-impl GameHandler {
+impl GameData {
     pub fn get_positions_to_test(&mut self) -> Vec<(i8, i8)> {
         let mut vec: Vec<(i8, i8)> = Vec::new();
         let mut data;

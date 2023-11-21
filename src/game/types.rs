@@ -1,11 +1,13 @@
 use crate::constants;
 use crate::game::GameEnd;
 
+#[derive(Clone)]
 pub struct Simulation {
     pub self_simulation: NestedSimulation,
     pub nested: Vec<NestedSimulation>,
 }
 
+#[derive(Clone)]
 pub struct NestedSimulation {
     pub next_move: (i8, i8),
     pub games: (i32, i32, i32),
