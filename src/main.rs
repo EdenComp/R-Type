@@ -10,7 +10,6 @@ mod handler;
 mod random;
 
 fn main() -> ExitCode {
-    eprintln!("There is {} cores", std::thread::available_parallelism().unwrap().get());
     let millis = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("Error getting time");
@@ -24,7 +23,6 @@ fn main() -> ExitCode {
                 done = handler.handle_line(line);
             }
             Some(Err(e)) => {
-                eprintln!("Error: {}", e);
                 return ExitCode::from(84);
             }
             None => {
