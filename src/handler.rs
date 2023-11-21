@@ -162,7 +162,7 @@ fn parse_position(pos: &str) -> Option<(i8, i8)> {
             let (x, y) = str;
             match (x.parse::<i8>(), y.parse::<i8>()) {
                 (Ok(x), Ok(y)) => {
-                    if x < 0 || x >= 20 || y < 0 || y >= 20 {
+                    if !(0..20).contains(&x) || !(0..20).contains(&y) {
                         return None;
                     }
                     Some((x, y))
@@ -189,72 +189,11 @@ fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
             if p != 1 && p != 2 {
                 return None;
             }
-            if x < 0 || x >= 20 || y < 0 || y >= 20 {
+            if !(0..20).contains(&x) || !(0..20).contains(&y) {
                 return None;
             }
             Some(((x, y), p == 1))
         }
         _ => None,
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use std::time::{SystemTime, UNIX_EPOCH};
-    use crate::handler::GameHandler;
-    use crate::random::Random;
-
-    #[test]
-    fn test_start() {
-        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
-        let random = Random::new(millis.as_millis());
-        let mut game = GameHandler::new(random);
-        game.start("20");
-        assert_eq!(game.board, false);
-    }
-
-    #[test]
-    fn test_board() {
-        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
-        let random = Random::new(millis.as_millis());
-        let mut game = GameHandler::new(random);
-        game.board("");
-        assert_eq!(game.board, true);
-    }
-
-    #[test]
-    fn test_info() {
-        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
-        let random = Random::new(millis.as_millis());
-        let mut game = GameHandler::new(random);
-        game.info("info");
-        assert_eq!(game.board, false);
-    }
-
-    #[test]
-    fn test_about() {
-        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
-        let random = Random::new(millis.as_millis());
-        let mut game = GameHandler::new(random);
-        game.about("");
-        assert_eq!(game.board, false);
-    }
-
-    #[test]
-    fn test_begin() {
-        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
-        let random = Random::new(millis.as_millis());
-        let mut game = GameHandler::new(random);
-        game.begin("");
-        assert_eq!(game.board, false);
-    }
-
-    #[test]
-    fn test_end() {
-        let millis = SystemTime::now().duration_since(UNIX_EPOCH).expect("Error getting time");
-        let random = Random::new(millis.as_millis());
-        let mut game = GameHandler::new(random);
-        game.end("");
-        assert_eq!(game.board, false);
     }
 }

@@ -40,16 +40,15 @@ impl GameData {
 #[cfg(test)]
 mod tests {
     use crate::game::GameData;
-    use crate::handler::GameHandler;
     use crate::random::Random;
 
     #[test]
     fn test_basic() {
-        let mut rand = Random::new(0);
+        let rand = Random::new(0);
         let mut game = GameData::new(rand);
 
         game.table[0][0] = 1;
-        assert_eq!(game.is_move_winning(&(0, 0)), false);
+        assert!(!game.is_move_winning(&(0, 0)));
     }
 
     #[test]
@@ -62,7 +61,7 @@ mod tests {
         game.table[2][0] = 2;
         game.table[3][0] = 2;
         game.table[4][0] = 2;
-        assert_eq!(game.is_move_winning(&(2, 0)), true);
+        assert!(game.is_move_winning(&(2, 0)));
     }
 
     #[test]
@@ -75,7 +74,7 @@ mod tests {
         game.table[2][2] = 1;
         game.table[3][3] = 1;
         game.table[4][4] = 1;
-        assert_eq!(game.is_move_winning(&(4, 4)), true);
+        assert!(game.is_move_winning(&(4, 4)));
     }
 
     #[test]
@@ -88,7 +87,7 @@ mod tests {
         game.table[2][0] = 2;
         game.table[3][0] = 1;
         game.table[4][0] = 1;
-        assert_eq!(game.is_move_winning(&(3, 0)), false);
+        assert!(!game.is_move_winning(&(3, 0)));
     }
 
     #[test]
@@ -100,6 +99,6 @@ mod tests {
         game.table[1][0] = 1;
         game.table[2][0] = 1;
         game.table[3][0] = 1;
-        assert_eq!(game.is_move_winning(&(3, 0)), false);
+        assert!(!game.is_move_winning(&(3, 0)));
     }
 }
