@@ -11,9 +11,10 @@ pub fn thread_function(local_arc: Arc<(Mutex<SharedData>, Condvar, Condvar)>) {
 
     loop {
         info = lock.lock().expect("Error locking mutex");
-        let _wait = cvar
+        info = cvar
             .wait(info)
             .expect("Error waiting for condition variable");
+        drop(info);
         if !retrieve_simulations(&local_arc) {
             return;
         }
@@ -31,7 +32,7 @@ fn retrieve_simulations(local_arc: &Arc<(Mutex<SharedData>, Condvar, Condvar)>) 
     match info.queue.pop_front() {
         None => {
             cvar_main.notify_one();
-            return true;
+            true
         }
         Some(mut simulation) => {
             drop(info);
