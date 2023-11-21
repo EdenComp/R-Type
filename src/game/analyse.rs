@@ -1,5 +1,5 @@
-use crate::game::GameData;
 use crate::game::types::Simulation;
+use crate::game::GameData;
 
 impl GameData {
     pub fn analyze_best_move(&mut self, vec_simulation: &[Simulation]) -> usize {

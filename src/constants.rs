@@ -3,8 +3,8 @@ pub static BRAIN_VERSION: &str = "0.1.0";
 pub static BRAIN_AUTHOR: &str = "Mehdi Taha Tion";
 pub static BRAIN_COUNTRY: &str = "France";
 
-pub const DEFAULT_MAX_MEMORY: i32 = 70000000;
-pub const DEFAULT_TIMEOUT_TURN: i32 = 5000;
+pub const _DEFAULT_MAX_MEMORY: i32 = 70000000;
+pub const _DEFAULT_TIMEOUT_TURN: i32 = 5000;
 pub const DEFAULT_SIZE: i8 = 20;
 
 pub static ABOUT_COMMAND: &str = "ABOUT";

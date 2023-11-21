@@ -7,6 +7,7 @@ mod simulation;
 pub mod types;
 mod win;
 
+#[derive(Clone)]
 pub struct GameData {
     pub table: [[i8; 20]; 20],
     pub state: [[i8; 20]; 20],

@@ -1,5 +1,5 @@
-use std::cmp::{max, min};
 use crate::game::GameData;
+use std::cmp::{max, min};
 
 impl GameData {
     pub fn get_positions_to_test(&mut self) -> Vec<(i8, i8)> {

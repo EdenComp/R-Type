@@ -1,23 +1,20 @@
+use crate::game::types::Simulation;
+use crate::game::GameData;
+use std::collections::VecDeque;
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
-use crate::game::types::Simulation;
 
-mod init;
 mod execution;
+mod init;
 
 pub struct ThreadPool {
-    global_arc: Arc<(Mutex<()>, Condvar)>,
-    threads: Vec<ThreadData>,
+    arc: Arc<(Mutex<SharedData>, Condvar, Condvar)>,
+    threads: Vec<thread::JoinHandle<()>>,
 }
 
-pub struct ThreadData {
-    pub local_arc: Arc<(Mutex<ThreadInfo>, Condvar)>,
-    pub thread: thread::JoinHandle<()>,
-}
-
-pub struct ThreadInfo {
-    pub id: u8,
+pub struct SharedData {
     pub exit: bool,
-    pub position: (i8, i8),
-    pub simulation: Simulation,
+    pub game: GameData,
+    pub queue: VecDeque<Simulation>,
+    pub results: Vec<Simulation>,
 }

@@ -1,15 +1,13 @@
-use std::collections::HashMap;
 use crate::constants;
 use crate::game::GameData;
 use crate::random::Random;
 use crate::threads::ThreadPool;
+use std::collections::HashMap;
 
 pub struct GameHandler {
     pub thread_pool: ThreadPool,
     game_data: GameData,
     board: bool,
-    max_memory: i32,
-    timeout_turn: i32,
     functions: HashMap<String, fn(&mut GameHandler, &str)>,
 }
 
@@ -28,8 +26,6 @@ impl GameHandler {
             thread_pool: ThreadPool::new(),
             game_data: GameData::new(random),
             board: false,
-            max_memory: constants::DEFAULT_MAX_MEMORY,
-            timeout_turn: constants::DEFAULT_TIMEOUT_TURN,
             functions,
         }
     }
@@ -108,7 +104,7 @@ impl GameHandler {
     }
 
     fn begin(&mut self, _args: &str) {
-        let new_move = self.game_data.get_next_move();
+        let new_move = self.game_data.get_next_move(&mut self.thread_pool);
 
         self.register_turn(new_move, true);
         self.broadcast_turn(new_move);
@@ -151,7 +147,7 @@ impl GameHandler {
                 self.error("Invalid position");
             }
         }
-        let new_move = self.game_data.get_next_move();
+        let new_move = self.game_data.get_next_move(&mut self.thread_pool);
 
         self.register_turn(new_move, true);
         self.broadcast_turn(new_move);
