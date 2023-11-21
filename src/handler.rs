@@ -130,7 +130,8 @@ impl GameHandler {
         match args.parse::<i8>() {
             Ok(size) => {
                 if size != constants::DEFAULT_SIZE {
-                    self.error("Invalid size")
+                    self.error("Invalid size");
+                    return;
                 }
                 println!("{}", constants::OK_RESPONSE)
             }
@@ -145,6 +146,7 @@ impl GameHandler {
             }
             None => {
                 self.error("Invalid position");
+                return;
             }
         }
         let new_move = self.game_data.get_next_move(&mut self.thread_pool);
@@ -159,7 +161,12 @@ fn parse_position(pos: &str) -> Option<(i8, i8)> {
         Some(str) => {
             let (x, y) = str;
             match (x.parse::<i8>(), y.parse::<i8>()) {
-                (Ok(x), Ok(y)) => Some((x, y)),
+                (Ok(x), Ok(y)) => {
+                    if !(0..20).contains(&x) || !(0..20).contains(&y) {
+                        return None;
+                    }
+                    Some((x, y))
+                }
                 _ => None,
             }
         }
@@ -180,6 +187,9 @@ fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
     ) {
         (Ok(x), Ok(y), Ok(p)) => {
             if p != 1 && p != 2 {
+                return None;
+            }
+            if !(0..20).contains(&x) || !(0..20).contains(&y) {
                 return None;
             }
             Some(((x, y), p == 1))
