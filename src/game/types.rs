@@ -16,9 +16,9 @@ pub struct NestedSimulation {
 }
 
 impl Simulation {
-    pub fn new(pos: (i8, i8)) -> Simulation {
+    pub fn new(pos: (i8, i8), simulations: usize) -> Simulation {
         Simulation {
-            self_simulation: NestedSimulation::new(pos, 0),
+            self_simulation: NestedSimulation::new(pos, simulations),
             nested: Vec::new(),
         }
     }

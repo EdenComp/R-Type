@@ -28,8 +28,8 @@ mod tests {
         let rand = Random::new(0);
         let mut game = GameData::new(rand);
         let mut vec_simulation = Vec::new();
-        let mut simulation = Simulation::new((0, 0));
-        let mut simulation2 = Simulation::new((0, 0));
+        let mut simulation = Simulation::new((0, 0), 0);
+        let mut simulation2 = Simulation::new((0, 0), 0);
 
         simulation.self_simulation.percentages = (50.0, 50.0, 0.0);
         simulation2.self_simulation.percentages = (51.0, 49.0, 0.0);
