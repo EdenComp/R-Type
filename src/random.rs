@@ -1,3 +1,5 @@
+use std::time::{SystemTime, UNIX_EPOCH};
+
 const RANDOM_MULTIPLIER: u128 = 25214903917;
 const RANDOM_ADDITION: u128 = 11;
 
@@ -9,6 +11,13 @@ pub struct Random {
 impl Random {
     pub fn new(seed: u128) -> Random {
         Random { last_number: seed }
+    }
+
+    pub fn refresh(&mut self) {
+        let millis = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Error getting time");
+        self.last_number = millis.as_micros();
     }
 
     fn rand(&mut self) {

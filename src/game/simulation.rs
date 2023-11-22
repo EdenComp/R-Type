@@ -29,7 +29,8 @@ impl GameData {
         }
 
         let results = pool.launch_simulations(self, simulations);
-        ai_positions[self.analyze_best_move(&results)]
+        let best_move = self.analyze_best_move(&results);
+        results[best_move].self_simulation.next_move
     }
 
     fn get_simulations_per_combination(&self, size: usize, cores: usize) -> usize {
