@@ -1,12 +1,16 @@
+use crate::constants;
 use crate::game::types::{NestedSimulation, Simulation};
 use crate::game::GameData;
 use crate::threads::ThreadPool;
+use std::cmp::min;
 use std::collections::VecDeque;
 
 impl GameData {
     pub fn simulate_next_move(&mut self, pool: &mut ThreadPool) -> (i8, i8) {
         let ai_positions = self.get_positions_to_test();
         let mut simulations: VecDeque<Simulation> = VecDeque::new();
+        let simulations_amount =
+            self.get_simulations_per_combination(ai_positions.len(), pool.cores);
 
         if let Some(pos) = self.make_early_decision(&ai_positions) {
             return pos;
@@ -17,13 +21,26 @@ impl GameData {
             enemy_positions.remove(idx);
 
             for enemy_pos in enemy_positions.iter() {
-                simulation_t0.nested.push(NestedSimulation::new(*enemy_pos));
+                simulation_t0
+                    .nested
+                    .push(NestedSimulation::new(*enemy_pos, simulations_amount));
             }
             simulations.push_back(simulation_t0);
         }
 
         let results = pool.launch_simulations(self, simulations);
         ai_positions[self.analyze_best_move(&results)]
+    }
+
+    fn get_simulations_per_combination(&self, size: usize, cores: usize) -> usize {
+        let total_combinations = size * (size - 1);
+        let simulations_per_combination =
+            constants::MAX_SIMULATIONS_PER_THREAD * cores / total_combinations;
+
+        min(
+            simulations_per_combination,
+            constants::MAX_SIMULATIONS_PER_COMBINATION,
+        )
     }
 
     fn make_early_decision(&mut self, positions: &[(i8, i8)]) -> Option<(i8, i8)> {

@@ -1,4 +1,3 @@
-use crate::constants;
 use crate::game::GameEnd;
 
 #[derive(Clone)]
@@ -12,23 +11,27 @@ pub struct NestedSimulation {
     pub next_move: (i8, i8),
     pub games: (i32, i32, i32),
     pub percentages: (f32, f32, f32),
+    pub simulations: usize,
+    pub divider: f32,
 }
 
 impl Simulation {
     pub fn new(pos: (i8, i8)) -> Simulation {
         Simulation {
-            self_simulation: NestedSimulation::new(pos),
+            self_simulation: NestedSimulation::new(pos, 0),
             nested: Vec::new(),
         }
     }
 }
 
 impl NestedSimulation {
-    pub fn new(pos: (i8, i8)) -> NestedSimulation {
+    pub fn new(pos: (i8, i8), simulations: usize) -> NestedSimulation {
         NestedSimulation {
             next_move: pos,
             games: (0, 0, 0),
             percentages: (0.0, 0.0, 0.0),
+            simulations,
+            divider: simulations as f32,
         }
     }
 
@@ -41,8 +44,8 @@ impl NestedSimulation {
     }
 
     pub fn calculate_percentages(&mut self) {
-        self.percentages.0 = (self.games.0 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
-        self.percentages.1 = (self.games.1 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
-        self.percentages.2 = (self.games.2 as f32 / constants::SIMULATIONS_DIVIDER) * 100.0;
+        self.percentages.0 = (self.games.0 as f32 / self.divider) * 100.0;
+        self.percentages.1 = (self.games.1 as f32 / self.divider) * 100.0;
+        self.percentages.2 = (self.games.2 as f32 / self.divider) * 100.0;
     }
 }

@@ -1,4 +1,3 @@
-use crate::constants;
 use crate::game::types::{NestedSimulation, Simulation};
 use crate::game::GameData;
 use crate::threads::{SharedData, ThreadPool};
@@ -93,7 +92,7 @@ impl ThreadPool {
 
 impl GameData {
     fn simulate_games(&mut self, simulation_t1: &mut NestedSimulation, ai_pos: &(i8, i8)) {
-        for _ in 0..constants::SIMULATIONS_AMOUNT {
+        for _ in 0..simulation_t1.simulations {
             self.table[ai_pos.0 as usize][ai_pos.1 as usize] = 1;
             self.table[simulation_t1.next_move.0 as usize][simulation_t1.next_move.1 as usize] = 2;
             simulation_t1.add_game(self.simulate_random_game(true));
