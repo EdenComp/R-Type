@@ -19,14 +19,14 @@ impl GameData {
 #[cfg(test)]
 
 mod tests {
-    use crate::handler::GameHandler;
     use crate::random::Random;
     use crate::game::types::Simulation;
+    use crate::game::GameData;
 
     #[test]
     fn analyze_best_move() {
         let rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
         let mut vec_simulation = Vec::new();
         let mut simulation = Simulation::new((0, 0));
         let mut simulation2 = Simulation::new((0, 0));

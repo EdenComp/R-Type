@@ -41,11 +41,12 @@ impl GameData {
 mod tests {
     use crate::handler::GameHandler;
     use crate::random::Random;
+    use crate::game::GameData;
 
     #[test]
     fn append_positions_to_vec() {
         let rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
         let mut vec: Vec<(i8, i8)> = Vec::new();
 
         game.table[0][0] = 1;
@@ -59,7 +60,7 @@ mod tests {
     #[test]
     fn get_positions_to_test() {
         let rand = Random::new(0);
-        let mut game = GameHandler::new(rand);
+        let mut game = GameData::new(rand);
         let mut vec: Vec<(i8, i8)> = Vec::new();
 
         game.table[0][0] = 1;
