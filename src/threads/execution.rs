@@ -28,6 +28,7 @@ fn retrieve_simulations(local_arc: &Arc<(Mutex<SharedData>, Condvar, Condvar)>) 
         return false;
     }
     let mut game = info.game.clone();
+    game.random.refresh();
     match info.queue.pop_front() {
         None => {
             cvar_main.notify_one();
