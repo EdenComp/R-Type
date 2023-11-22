@@ -30,7 +30,7 @@ jobs:
     container: rust:latest
     steps:
       - name: Install clippy
-        run: rustup component add clippy
+        run: rustup override set 1.72.1 ; rustup component add clippy
       - name: Repository checkout
         uses: actions/checkout@v4
         with:
@@ -44,7 +44,7 @@ jobs:
     container: rust:latest
     steps:
       - name: Install fmt
-        run: rustup component add rustfmt
+        run: rustup override set 1.72.1 ; rustup component add rustfmt
       - name: Repository checkout
         uses: actions/checkout@v4
         with:
