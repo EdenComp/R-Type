@@ -19,9 +19,9 @@ impl GameData {
 #[cfg(test)]
 
 mod tests {
-    use crate::random::Random;
     use crate::game::types::Simulation;
     use crate::game::GameData;
+    use crate::random::Random;
 
     #[test]
     fn analyze_best_move() {

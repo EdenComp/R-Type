@@ -39,9 +39,8 @@ impl GameData {
 
 #[cfg(test)]
 mod tests {
-    use crate::handler::GameHandler;
-    use crate::random::Random;
     use crate::game::GameData;
+    use crate::random::Random;
 
     #[test]
     fn append_positions_to_vec() {
@@ -61,7 +60,7 @@ mod tests {
     fn get_positions_to_test() {
         let rand = Random::new(0);
         let mut game = GameData::new(rand);
-        let mut vec: Vec<(i8, i8)> = Vec::new();
+        let vec: Vec<(i8, i8)>;
 
         game.table[0][0] = 1;
         vec = game.get_positions_to_test();
@@ -70,6 +69,5 @@ mod tests {
         assert_eq!(vec[0], (0, 1));
         assert_eq!(vec[1], (1, 0));
         assert_eq!(vec[2], (1, 1));
-        
     }
 }
