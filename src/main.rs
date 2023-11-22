@@ -17,7 +17,6 @@ fn main() -> ExitCode {
     let random = Random::new(millis.as_millis());
     let mut handler = handler::GameHandler::new(random);
     let mut done = false;
-    let mut code = 0;
 
     while !done {
         match stdin().lock().lines().next() {
@@ -26,7 +25,6 @@ fn main() -> ExitCode {
             }
             Some(Err(e)) => {
                 eprintln!("Error: {}", e);
-                code = 84;
                 done = true;
             }
             None => {
@@ -35,5 +33,5 @@ fn main() -> ExitCode {
         }
     }
     handler.thread_pool.stop_threads();
-    ExitCode::from(code)
+    ExitCode::from(0)
 }
