@@ -1,7 +1,7 @@
 name: R-Type
 
 on:
-  pull_request:
+  push:
 
 env:
   EXECUTABLES: "pbrain-gomoku-ai"
@@ -27,7 +27,7 @@ jobs:
   clippy:
     name: "Clippy"
     runs-on: ubuntu-latest
-    container: epitechcontent/epitest-docker:latest
+    container: rust:latest
     steps:
       - name: Install clippy
         run: rustup component add clippy
