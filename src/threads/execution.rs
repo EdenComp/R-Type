@@ -61,6 +61,7 @@ impl ThreadPool {
         simulations: VecDeque<Simulation>,
     ) -> Vec<Simulation> {
         let mut info = self.arc.0.lock().expect("Error locking mutex");
+        let size = simulations.len();
 
         info.game = game.clone();
         info.results = Vec::new();
@@ -75,6 +76,10 @@ impl ThreadPool {
                 .2
                 .wait(info)
                 .expect("Error waiting for condition variable");
+
+            if info.results.len() == size {
+                break;
+            }
             drop(info);
         }
 

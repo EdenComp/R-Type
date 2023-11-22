@@ -27,6 +27,8 @@ impl GameData {
     }
 
     fn make_early_decision(&mut self, positions: &[(i8, i8)]) -> Option<(i8, i8)> {
+        let mut avoid_lose: Option<(i8, i8)> = None;
+
         for pos in positions.iter() {
             self.table[pos.0 as usize][pos.1 as usize] = 1;
             if self.is_move_winning(pos) {
@@ -34,10 +36,10 @@ impl GameData {
             }
             self.table[pos.0 as usize][pos.1 as usize] = 2;
             if self.is_move_winning(pos) {
-                return Some(*pos);
+                avoid_lose = Some(*pos);
             }
             self.table[pos.0 as usize][pos.1 as usize] = 0;
         }
-        None
+        avoid_lose
     }
 }
