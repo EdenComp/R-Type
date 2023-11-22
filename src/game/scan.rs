@@ -64,7 +64,7 @@ mod tests {
 
         game.table[0][0] = 1;
         vec = game.get_positions_to_test();
-        println!("vec: {:?}", vec);
+
         assert_eq!(vec.len(), 3);
         assert_eq!(vec[0], (0, 1));
         assert_eq!(vec[1], (1, 0));
