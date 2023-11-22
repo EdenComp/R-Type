@@ -33,6 +33,7 @@ impl ThreadPool {
         ThreadPool {
             arc: global_arc,
             threads,
+            cores,
         }
     }
 

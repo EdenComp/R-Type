@@ -10,6 +10,7 @@ mod init;
 pub struct ThreadPool {
     arc: Arc<(Mutex<SharedData>, Condvar, Condvar)>,
     threads: Vec<thread::JoinHandle<()>>,
+    pub cores: usize,
 }
 
 pub struct SharedData {
