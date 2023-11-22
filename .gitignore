@@ -1,4 +1,5 @@
 target/
 .idea/
-pbrain-gomoku-ai
-r-type
+pbrain-gomoku-ai*
+r-type*
+*.exe
