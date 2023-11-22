@@ -36,7 +36,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Clippy check
-        run: cargo clippy --fix ; git diff --exit-code
+        run: RUSTFLAGS="-Dwarnings" cargo clippy
 
   format:
     name: "Format"
