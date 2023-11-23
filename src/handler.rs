@@ -88,7 +88,7 @@ impl GameHandler {
     fn register_turn(&mut self, pos: (i8, i8), me: bool) {
         self.game_data.table[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
         self.game_data.state[pos.0 as usize][pos.1 as usize] = if me { 1 } else { 2 };
-        self.game_data.empty_positions.push(pos);
+        self.game_data.empty_positions.retain(|&x| x != pos);
         self.game_data.remaining_turns -= 1;
         self.game_data.turns += 1;
     }
@@ -211,7 +211,7 @@ mod tests {
         game_data.register_turn((0, 0), true);
         assert_eq!(game_data.game_data.table[0][0], 1);
         assert_eq!(game_data.game_data.state[0][0], 1);
-        assert_eq!(game_data.game_data.empty_positions.len(), 401);
+        assert_eq!(game_data.game_data.empty_positions.len(), 399);
         assert_eq!(game_data.game_data.remaining_turns, 399);
         assert_eq!(game_data.game_data.turns, 1);
     }
@@ -224,7 +224,7 @@ mod tests {
         game_data.register_turn((0, 0), false);
         assert_eq!(game_data.game_data.table[0][0], 2);
         assert_eq!(game_data.game_data.state[0][0], 2);
-        assert_eq!(game_data.game_data.empty_positions.len(), 401);
+        assert_eq!(game_data.game_data.empty_positions.len(), 399);
         assert_eq!(game_data.game_data.remaining_turns, 399);
         assert_eq!(game_data.game_data.turns, 1);
     }
