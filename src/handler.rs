@@ -243,12 +243,8 @@ mod tests {
     fn test_parse_board_position() {
         use super::parse_board_position;
 
-        assert_eq!(
-            parse_board_position("0,0,1"), Some(((0, 0), true))
-        );
-        assert_eq!(
-            parse_board_position("0,0,2"), Some(((0, 0), false))
-        );
+        assert_eq!(parse_board_position("0,0,1"), Some(((0, 0), true)));
+        assert_eq!(parse_board_position("0,0,2"), Some(((0, 0), false)));
 
         assert_eq!(parse_board_position("0,0,3"), None);
         assert_eq!(parse_board_position("0,0"), None);
