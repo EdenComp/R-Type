@@ -197,3 +197,74 @@ fn parse_board_position(pos: &str) -> Option<((i8, i8), bool)> {
         _ => None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::handler::GameHandler;
+    use crate::random::Random;
+
+    #[test]
+    fn test_register_turn() {
+        let rand = Random::new(0);
+        let mut game_data = GameHandler::new(rand);
+
+        game_data.register_turn((0, 0), true);
+        assert_eq!(game_data.game_data.table[0][0], 1);
+        assert_eq!(game_data.game_data.state[0][0], 1);
+        assert_eq!(game_data.game_data.empty_positions.len(), 401);
+        assert_eq!(game_data.game_data.remaining_turns, 399);
+        assert_eq!(game_data.game_data.turns, 1);
+    }
+
+    #[test]
+    fn test_register_turn_opponent() {
+        let rand = Random::new(0);
+        let mut game_data = GameHandler::new(rand);
+
+        game_data.register_turn((0, 0), false);
+        assert_eq!(game_data.game_data.table[0][0], 2);
+        assert_eq!(game_data.game_data.state[0][0], 2);
+        assert_eq!(game_data.game_data.empty_positions.len(), 401);
+        assert_eq!(game_data.game_data.remaining_turns, 399);
+        assert_eq!(game_data.game_data.turns, 1);
+    }
+
+    #[test]
+    fn test_begin() {
+        let rand = Random::new(0);
+        let mut game_data = GameHandler::new(rand);
+
+        game_data.begin("");
+        assert_eq!(game_data.game_data.table[10][10], 1);
+        assert_eq!(game_data.game_data.state[10][10], 1);
+    }
+
+    #[test]
+    fn test_parse_board_position() {
+        use super::parse_board_position;
+
+        assert_eq!(
+            parse_board_position("0,0,1"), Some(((0, 0), true))
+        );
+        assert_eq!(
+            parse_board_position("0,0,2"), Some(((0, 0), false))
+        );
+
+        assert_eq!(parse_board_position("0,0,3"), None);
+        assert_eq!(parse_board_position("0,0"), None);
+    }
+
+    #[test]
+    fn test_parse_position() {
+        use super::parse_position;
+
+        assert_eq!(parse_position("0,0"), Some((0, 0)));
+        assert_eq!(parse_position("1,0"), Some((1, 0)));
+        assert_eq!(parse_position("0, 0"), None);
+        assert_eq!(parse_position("0,0,0"), None);
+        assert_eq!(parse_position(" 0,0"), None);
+        assert_eq!(parse_position("0.0"), None);
+        assert_eq!(parse_position("1000000,0"), None);
+        assert_eq!(parse_position("0,1000000"), None);
+    }
+}
