@@ -49,3 +49,26 @@ impl NestedSimulation {
         self.percentages.2 = (self.games.2 as f32 / self.divider) * 100.0;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::game::types::NestedSimulation;
+    use crate::game::GameEnd;
+
+    #[test]
+    fn test_calcul_percentage() {
+        let mut nested_simulation = NestedSimulation::new((0, 0), 100);
+        nested_simulation.games = (100, 100, 0);
+        nested_simulation.calculate_percentages();
+        assert_eq!(nested_simulation.percentages, (100.0, 100.0, 0.0));
+    }
+
+    #[test]
+    fn test_add_game() {
+        let mut nested_simulation = NestedSimulation::new((0, 0), 100);
+        nested_simulation.add_game(GameEnd::Victory);
+        nested_simulation.add_game(GameEnd::Defeat);
+        nested_simulation.add_game(GameEnd::Draw);
+        assert_eq!(nested_simulation.games, (1, 1, 1));
+    }
+}
