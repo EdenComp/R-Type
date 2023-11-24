@@ -46,3 +46,23 @@ pub enum GameEnd {
     Defeat,
     Draw,
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::game::GameData;
+    use crate::random::Random;
+
+    #[test]
+    fn test_new() {
+        let rand = Random::new(0);
+        let game_data = GameData::new(rand);
+
+        assert_eq!(game_data.size, (20, 20));
+        assert_eq!(game_data.table, [[0i8; 20]; 20]);
+        assert_eq!(game_data.state, [[0i8; 20]; 20]);
+        assert_eq!(game_data.turns, 0);
+        assert_eq!(game_data.remaining_turns, 400);
+        assert_eq!(game_data.max_turns, 400);
+        assert_eq!(game_data.empty_positions.len(), 400);
+    }
+}
