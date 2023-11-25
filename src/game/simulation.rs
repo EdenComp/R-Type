@@ -34,7 +34,6 @@ impl GameData {
                 results[best_move].self_simulation.next_move
             }
             None => {
-                println!("PLACING RANDOM");
                 ai_positions[self.random.range(0, size)]
             }
         }

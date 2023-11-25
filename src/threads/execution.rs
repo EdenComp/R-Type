@@ -43,7 +43,6 @@ fn retrieve_simulations(local_arc: &Arc<(Mutex<SharedData>, Condvar, Condvar)>, 
             execute_simulations(&mut simulation, &mut game);
             info = lock.lock().expect("Error locking mutex");
             if turn != info.game.turns {
-                println!("NOT IN CURRENT TURN");
                 cvar_main.notify_one();
                 return true;
             }
