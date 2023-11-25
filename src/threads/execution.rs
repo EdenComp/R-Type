@@ -1,26 +1,30 @@
+use crate::constants;
 use crate::game::types::{NestedSimulation, Simulation};
 use crate::game::GameData;
 use crate::threads::{SharedData, ThreadPool};
 use std::collections::VecDeque;
 use std::sync::{Arc, Condvar, Mutex};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 pub fn thread_function(local_arc: Arc<(Mutex<SharedData>, Condvar, Condvar)>) {
     let (lock, cvar, _) = &*local_arc;
     let mut info;
+    let mut current_turn;
 
     loop {
         info = lock.lock().expect("Error locking mutex");
         info = cvar
             .wait(info)
             .expect("Error waiting for condition variable");
+        current_turn = info.game.turns;
         drop(info);
-        if !retrieve_simulations(&local_arc) {
+        if !retrieve_simulations(&local_arc, current_turn) {
             return;
         }
     }
 }
 
-fn retrieve_simulations(local_arc: &Arc<(Mutex<SharedData>, Condvar, Condvar)>) -> bool {
+fn retrieve_simulations(local_arc: &Arc<(Mutex<SharedData>, Condvar, Condvar)>, turn: i32) -> bool {
     let (lock, _, cvar_main) = &**local_arc;
     let mut info = lock.lock().expect("Error locking mutex");
 
@@ -38,9 +42,14 @@ fn retrieve_simulations(local_arc: &Arc<(Mutex<SharedData>, Condvar, Condvar)>) 
             drop(info);
             execute_simulations(&mut simulation, &mut game);
             info = lock.lock().expect("Error locking mutex");
+            if turn != info.game.turns {
+                println!("NOT IN CURRENT TURN");
+                cvar_main.notify_one();
+                return true;
+            }
             info.results.push(simulation);
             drop(info);
-            retrieve_simulations(local_arc)
+            retrieve_simulations(local_arc, turn)
         }
     }
 }
@@ -59,9 +68,14 @@ impl ThreadPool {
         &mut self,
         game: &GameData,
         simulations: VecDeque<Simulation>,
-    ) -> Vec<Simulation> {
+    ) -> Option<Vec<Simulation>> {
         let mut info = self.arc.0.lock().expect("Error locking mutex");
         let size = simulations.len();
+        let millis = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Error getting time")
+            .as_millis() as u64;
+        let mut delay = constants::MAX_SIMULATIONS_MILLIS;
 
         info.game = game.clone();
         info.results = Vec::new();
@@ -70,24 +84,30 @@ impl ThreadPool {
         self.arc.1.notify_all();
 
         for _ in 1..self.threads.len() {
-            let mut info = self.arc.0.lock().expect("Error locking mutex");
-            info = self
+            let lock = self.arc.0.lock().expect("Error locking mutex");
+            let info = self
                 .arc
                 .2
-                .wait(info)
+                .wait_timeout(lock, Duration::from_millis(delay))
                 .expect("Error waiting for condition variable");
 
-            if info.results.len() == size {
+            let now = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("Error getting time");
+            delay = constants::MAX_SIMULATIONS_MILLIS - (now.as_millis() as u64 - millis);
+            if info.1.timed_out() {
+                return None;
+            }
+            if info.0.results.len() == size {
                 break;
             }
-            drop(info);
         }
 
         let results = Vec::new();
-        std::mem::replace(
+        Some(std::mem::replace(
             &mut self.arc.0.lock().expect("Error locking mutex").results,
             results,
-        )
+        ))
     }
 }
 

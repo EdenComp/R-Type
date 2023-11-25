@@ -28,9 +28,16 @@ impl GameData {
             simulations.push_back(simulation_t0);
         }
 
-        let results = pool.launch_simulations(self, simulations);
-        let best_move = self.analyze_best_move(&results);
-        results[best_move].self_simulation.next_move
+        match pool.launch_simulations(self, simulations) {
+            Some(results) => {
+                let best_move = self.analyze_best_move(&results);
+                results[best_move].self_simulation.next_move
+            }
+            None => {
+                println!("PLACING RANDOM");
+                ai_positions[self.random.range(0, size)]
+            }
+        }
     }
 
     fn get_simulations_per_combination(&self, size: usize, cores: usize) -> usize {
