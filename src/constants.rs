@@ -22,5 +22,5 @@ pub static ERROR_RESPONSE: &str = "ERROR";
 pub static OK_RESPONSE: &str = "OK";
 pub static UNKNOWN_RESPONSE: &str = "UNKNOWN";
 
-pub static MAX_SIMULATIONS_PER_COMBINATION: usize = 10000;
-pub static MAX_SIMULATIONS_PER_THREAD: usize = 200000;
+pub static MAX_SIMULATIONS_PER_COMBINATION: usize = 5000;
+pub static MAX_SIMULATIONS_PER_THREAD: usize = 80000;
