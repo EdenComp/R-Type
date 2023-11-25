@@ -33,9 +33,7 @@ impl GameData {
                 let best_move = self.analyze_best_move(&results);
                 results[best_move].self_simulation.next_move
             }
-            None => {
-                ai_positions[self.random.range(0, size)]
-            }
+            None => ai_positions[self.random.range(0, size)],
         }
     }
 
