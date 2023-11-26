@@ -57,18 +57,21 @@ mod tests {
 
     #[test]
     fn test_calcul_percentage() {
-        let mut nested_simulation = NestedSimulation::new((0, 0), 100);
+        let mut nested_simulation = NestedSimulation::new((0, 0), 200);
         nested_simulation.games = (100, 100, 0);
         nested_simulation.calculate_percentages();
-        assert_eq!(nested_simulation.percentages, (100.0, 100.0, 0.0));
+        assert_eq!(nested_simulation.percentages, (50.0, 50.0, 0.0));
     }
 
     #[test]
     fn test_add_game() {
-        let mut nested_simulation = NestedSimulation::new((0, 0), 100);
+        let mut nested_simulation = NestedSimulation::new((0, 0), 4);
         nested_simulation.add_game(GameEnd::Victory);
         nested_simulation.add_game(GameEnd::Defeat);
+        nested_simulation.add_game(GameEnd::Defeat);
         nested_simulation.add_game(GameEnd::Draw);
-        assert_eq!(nested_simulation.games, (1, 1, 1));
+        nested_simulation.calculate_percentages();
+        assert_eq!(nested_simulation.games, (1, 2, 1));
+        assert_eq!(nested_simulation.percentages, (25.0, 50.0, 25.0));
     }
 }
